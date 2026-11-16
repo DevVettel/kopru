@@ -11,6 +11,8 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 **Hedef:** Mimarinin uçtan uca çalıştığını kanıtlamak. Tek bir ödeme ve tek bir kargo sağlayıcısı ile, gerçek sağlayıcı hesabı gerektirmeden yerelde test edilebilen, tip güvenli bir çekirdek.
 
 > MVP kapsamı bilinçli olarak dar tutulmuştur. Faz 1'de **e-Dönüşüm, banka sanal POS'ları ve REST sunucusu yoktur.**
+>
+> 📋 Görev bazlı detaylı uygulama planı: [docs/plans/PHASE-1.md](./docs/plans/PHASE-1.md)
 
 ### 1.0 Altyapı ⬜
 - [ ] pnpm workspaces monorepo kurulumu

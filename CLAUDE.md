@@ -1,6 +1,6 @@
 # CLAUDE.md — Köprü Geliştirme Kuralları
 
-Bu dosya, Köprü projesinde kod geliştirirken uyulması **zorunlu** kuralları içerir. Herhangi bir kod yazmadan önce bu dosyayı, [ARCHITECTURE.md](./ARCHITECTURE.md) ve [ROADMAP.md](./ROADMAP.md) dosyalarını referans al.
+Bu dosya, Köprü projesinde kod geliştirirken uyulması **zorunlu** kuralları içerir. Herhangi bir kod yazmadan önce bu dosyayı, [ARCHITECTURE.md](./ARCHITECTURE.md), [ROADMAP.md](./ROADMAP.md) ve [docs/GLOSSARY.md](./docs/GLOSSARY.md) dosyalarını referans al.
 
 ---
 
@@ -59,6 +59,7 @@ export async function charge(input: ChargeRequest): Promise<Result<ChargeResult,
 ## 📐 Kodlama Standartları
 
 ### İsimlendirme
+- Türkçe alan terimlerinin İngilizce karşılıkları **[docs/GLOSSARY.md](./docs/GLOSSARY.md)** dosyasındaki tabloya göre seçilir. Sözlükte olmayan yeni bir kavram kodlanmadan önce sözlüğe eklenir.
 - Dosyalar: `kebab-case.ts`
 - Sınıflar, tipler, arayüzler: `PascalCase` (arayüzlerde `I` ön eki kullanılmaz)
 - Fonksiyonlar, değişkenler: `camelCase`
