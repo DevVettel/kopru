@@ -1,0 +1,20 @@
+{
+  "name": "@kopru/tsup-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "peerDependencies": {
+    "tsup": "*"
+  },
+  "devDependencies": {
+    "tsup": "^9.0.0"
+  }
+}

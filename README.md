@@ -14,14 +14,14 @@ Stripe ve Plaid'in global ekosisteme getirdiği geliştirici deneyimini, yerel e
 
 Türkiye'de bir e-ticaret ya da SaaS ürünü geliştiren her ekip, aynı zahmetli yolu tekrar tekrar yürür:
 
-| Problem | Bugünkü Durum |
-| --- | --- |
-| **Parçalı API'ler** | Her banka, ödeme kuruluşu ve kargo firması farklı protokol kullanır: SOAP, XML, form-post, imzalı hash'ler, REST… |
+| Problem                     | Bugünkü Durum                                                                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Parçalı API'ler**         | Her banka, ödeme kuruluşu ve kargo firması farklı protokol kullanır: SOAP, XML, form-post, imzalı hash'ler, REST…                                  |
 | **Tutarsız veri modelleri** | Bir sağlayıcıda `amount` kuruş cinsinden, diğerinde `"10,50"` string olarak gelir. Adres, il/ilçe kodları, telefon formatları her yerde farklıdır. |
-| **Anlamsız hata kodları** | `"Hata: 05"`, `"ErrMsg: Islem onaylanmadi"`… Hataların anlamını çözmek için PDF dökümanlarda kaybolursunuz. |
-| **Vendor lock-in** | Sağlayıcı değiştirmek, iş mantığının büyük kısmını yeniden yazmak demektir. |
-| **Test zorluğu** | Sandbox ortamları ya yoktur, ya yavaştır, ya da üretimden farklı davranır. |
-| **Tekrarlanan emek** | Aynı 3D Secure akışı, aynı hash hesaplaması, aynı XML parse işlemi binlerce şirkette yeniden yazılır. |
+| **Anlamsız hata kodları**   | `"Hata: 05"`, `"ErrMsg: Islem onaylanmadi"`… Hataların anlamını çözmek için PDF dökümanlarda kaybolursunuz.                                        |
+| **Vendor lock-in**          | Sağlayıcı değiştirmek, iş mantığının büyük kısmını yeniden yazmak demektir.                                                                        |
+| **Test zorluğu**            | Sandbox ortamları ya yoktur, ya yavaştır, ya da üretimden farklı davranır.                                                                         |
+| **Tekrarlanan emek**        | Aynı 3D Secure akışı, aynı hash hesaplaması, aynı XML parse işlemi binlerce şirkette yeniden yazılır.                                              |
 
 **Köprü bu emeği bir kez, doğru ve açık kaynak olarak yapar.**
 
@@ -30,18 +30,23 @@ Türkiye'de bir e-ticaret ya da SaaS ürünü geliştiren her ekip, aynı zahmet
 ## ✨ Yaklaşım: Önce Geliştirici Deneyimi (DX)
 
 ### 1. Tek API, değiştirilebilir sağlayıcılar
+
 İş mantığınız sağlayıcıdan bağımsızdır. iyzico'dan PayTR'ye geçmek bir konfigürasyon değişikliğidir, yeniden yazım değil.
 
 ### 2. Uçtan uca tip güvenliği
+
 Tüm istek ve yanıtlar **Zod** şemaları ile tanımlanır. Derleme zamanında TypeScript, çalışma zamanında Zod sizi korur. Sağlayıcıdan beklenmedik bir yanıt gelirse sessizce bozulmaz, anlamlı bir hata alırsınız.
 
 ### 3. Anlaşılır, standart hatalar
+
 `"Hata: 05"` yerine `KopruError` sınıfından türeyen, makine tarafından okunabilir bir kod (`PAYMENT_CARD_DECLINED`), Türkçe/İngilizce açıklama ve sağlayıcının ham yanıtını içeren hatalar.
 
 ### 4. Gerçekçi Mock Server
+
 Gerçek sağlayıcı hesabı açmadan, yerelde ve CI ortamında tüm akışları (3D Secure dahil) test edebilmeniz için sağlayıcı davranışlarını taklit eden bir mock sunucu.
 
 ### 5. İki kullanım modu
+
 - **Kütüphane olarak:** Node.js uygulamanıza `npm` paketi olarak ekleyin.
 - **Ara katman (middleware) olarak:** Dilden bağımsız standart bir JSON/REST servisi olarak ayağa kaldırın; PHP, Python, Go ya da herhangi bir istemciden kullanın.
 
@@ -49,11 +54,11 @@ Gerçek sağlayıcı hesabı açmadan, yerelde ve CI ortamında tüm akışları
 
 ## 🔭 Kapsam
 
-| Alan | Örnek Sağlayıcılar |
-| --- | --- |
-| 💳 **Ödeme** | iyzico, PayTR, banka sanal POS'ları (Garanti BBVA, Akbank, İş Bankası, Yapı Kredi vb.) |
-| 📦 **Kargo** | Yurtiçi Kargo, Aras Kargo, MNG, Sürat, PTT |
-| 🧾 **e-Dönüşüm** | e-Fatura, e-Arşiv, e-İrsaliye entegratörleri |
+| Alan             | Örnek Sağlayıcılar                                                                     |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| 💳 **Ödeme**     | iyzico, PayTR, banka sanal POS'ları (Garanti BBVA, Akbank, İş Bankası, Yapı Kredi vb.) |
+| 📦 **Kargo**     | Yurtiçi Kargo, Aras Kargo, MNG, Sürat, PTT                                             |
+| 🧾 **e-Dönüşüm** | e-Fatura, e-Arşiv, e-İrsaliye entegratörleri                                           |
 
 ---
 

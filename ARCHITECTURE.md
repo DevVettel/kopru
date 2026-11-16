@@ -60,8 +60,9 @@ kopru/
 - Workspace içi bağımlılıklar `workspace:*` protokolü ile tanımlanır.
 
 ### Paket çıktıları
+
 - ESM + CJS çift çıktı, `.d.ts` tip tanımlarıyla birlikte.
-- Node.js LTS (≥ 20) hedeflenir; `fetch` yerleşik olarak kullanılır.
+- Node.js ≥ 22 hedeflenir; `fetch` yerleşik olarak kullanılır (bkz. [ADR-0006](./docs/adr/0006-node-version.md)).
 
 ---
 
@@ -69,18 +70,18 @@ kopru/
 
 Core, projenin "anayasası"dır. Sorumlulukları:
 
-| Modül | Sorumluluk |
-| --- | --- |
-| `domain/payment` | Ödeme alanı şemaları: `ChargeRequest`, `ChargeResult`, `RefundRequest`, `ThreeDSInitResult`, `Installment` vb. ve `PaymentProvider` arayüzü |
-| `domain/cargo` | Kargo alanı şemaları: `CreateShipmentRequest`, `Shipment`, `TrackingEvent`, `ShipmentStatus` ve `CargoProvider` arayüzü |
-| `domain/einvoice` | e-Dönüşüm şemaları ve `EInvoiceProvider` arayüzü (Faz 2+) |
-| `primitives` | Ortak değer tipleri: `Money` (kuruş cinsinden tam sayı + para birimi), `Address` (il/ilçe kodlu), `PhoneNumber` (E.164), `TCKN`, `VKN`, `IBAN` |
-| `errors` | `KopruError` hiyerarşisi ve standart hata kodları kataloğu |
-| `result` | `Result<T, E>` tipi ve yardımcıları (`ok`, `err`) |
-| `provider` | Provider tanımlama yardımcısı (`defineProvider`), yetenek (capability) sistemi, kayıt (registry) |
-| `http` | Sağlayıcıların kullandığı ortak HTTP istemcisi: zaman aşımı, yeniden deneme, loglama kancaları, hassas veri maskeleme |
-| `utils` | Hash/HMAC imzalama, XML ↔ JSON dönüşümü, tarih/saat (Europe/Istanbul) yardımcıları |
-| `client` | Kullanıcıya açılan fabrika fonksiyonları: `createPaymentClient`, `createCargoClient` |
+| Modül             | Sorumluluk                                                                                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `domain/payment`  | Ödeme alanı şemaları: `ChargeRequest`, `ChargeResult`, `RefundRequest`, `ThreeDSInitResult`, `Installment` vb. ve `PaymentProvider` arayüzü    |
+| `domain/cargo`    | Kargo alanı şemaları: `CreateShipmentRequest`, `Shipment`, `TrackingEvent`, `ShipmentStatus` ve `CargoProvider` arayüzü                        |
+| `domain/einvoice` | e-Dönüşüm şemaları ve `EInvoiceProvider` arayüzü (Faz 2+)                                                                                      |
+| `primitives`      | Ortak değer tipleri: `Money` (kuruş cinsinden tam sayı + para birimi), `Address` (il/ilçe kodlu), `PhoneNumber` (E.164), `TCKN`, `VKN`, `IBAN` |
+| `errors`          | `KopruError` hiyerarşisi ve standart hata kodları kataloğu                                                                                     |
+| `result`          | `Result<T, E>` tipi ve yardımcıları (`ok`, `err`)                                                                                              |
+| `provider`        | Provider tanımlama yardımcısı (`defineProvider`), yetenek (capability) sistemi, kayıt (registry)                                               |
+| `http`            | Sağlayıcıların kullandığı ortak HTTP istemcisi: zaman aşımı, yeniden deneme, loglama kancaları, hassas veri maskeleme                          |
+| `utils`           | Hash/HMAC imzalama, XML ↔ JSON dönüşümü, tarih/saat (Europe/Istanbul) yardımcıları                                                             |
+| `client`          | Kullanıcıya açılan fabrika fonksiyonları: `createPaymentClient`, `createCargoClient`                                                           |
 
 > Core, **hiçbir sağlayıcıya özgü** alan, sabit veya mantık içermez.
 
@@ -95,12 +96,18 @@ Her alan (domain) için core bir provider arayüzü tanımlar. Kavramsal olarak:
 ```ts
 // @kopru/core — kavramsal taslak
 interface PaymentProvider {
-  readonly id: string;                         // "iyzico"
-  readonly capabilities: PaymentCapabilities;  // { threeDS: true, installments: true, refund: true, ... }
+  readonly id: string; // "iyzico"
+  readonly capabilities: PaymentCapabilities; // { threeDS: true, installments: true, refund: true, ... }
 
   charge(input: ChargeRequest, ctx: ProviderContext): Promise<Result<ChargeResult, KopruError>>;
-  initThreeDS(input: ChargeRequest, ctx: ProviderContext): Promise<Result<ThreeDSInitResult, KopruError>>;
-  completeThreeDS(input: ThreeDSCallback, ctx: ProviderContext): Promise<Result<ChargeResult, KopruError>>;
+  initThreeDS(
+    input: ChargeRequest,
+    ctx: ProviderContext,
+  ): Promise<Result<ThreeDSInitResult, KopruError>>;
+  completeThreeDS(
+    input: ThreeDSCallback,
+    ctx: ProviderContext,
+  ): Promise<Result<ChargeResult, KopruError>>;
   refund(input: RefundRequest, ctx: ProviderContext): Promise<Result<RefundResult, KopruError>>;
 }
 ```
@@ -150,9 +157,11 @@ Result<ChargeResult, KopruError>
 ```
 
 ### 4.4. Capability sistemi
+
 Her sağlayıcı her özelliği desteklemez (örn. kısmi iade, taksit sorgulama, kargo iptali). Sağlayıcı, desteklediği yetenekleri statik olarak bildirir. Desteklenmeyen bir işlem çağrılırsa ağ isteği yapılmadan `PROVIDER_CAPABILITY_NOT_SUPPORTED` hatası döner. Böylece kullanıcı, çalışma zamanında `client.supports('refund.partial')` ile kontrol yapabilir.
 
 ### 4.5. Yeni sağlayıcı ekleme kontrol listesi
+
 1. `packages/<alan>-<sağlayıcı>` paketini oluştur.
 2. Konfigürasyon ve ham API şemalarını Zod ile yaz.
 3. Mapper'ları saf fonksiyonlar olarak yaz ve birim testlerini ekle.
@@ -165,6 +174,7 @@ Her sağlayıcı her özelliği desteklemez (örn. kısmi iade, taksit sorgulama
 ## 5. Zod ile Tip Güvenliği
 
 ### 5.1. Şema önce gelir
+
 Tipler elle yazılmaz; şemadan türetilir:
 
 ```ts
@@ -176,14 +186,16 @@ export type Money = z.infer<typeof MoneySchema>;
 ```
 
 ### 5.2. Doğrulama noktaları
-| Sınır | Neden |
-| --- | --- |
-| **Kullanıcı girdisi** (client metodları, REST endpoint'leri) | Hatalı veriyi sağlayıcıya gitmeden yakalamak |
-| **Sağlayıcı konfigürasyonu** | Eksik API anahtarı vb. hataları başlangıçta yakalamak |
-| **Sağlayıcı ham yanıtı** | Sağlayıcının belgelenmemiş/değişmiş davranışını sessizce yutmamak |
-| **Webhook / callback girdisi** (3D Secure dönüşü, kargo durum bildirimi) | Dış dünyadan gelen güvenilmeyen veri |
+
+| Sınır                                                                    | Neden                                                             |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| **Kullanıcı girdisi** (client metodları, REST endpoint'leri)             | Hatalı veriyi sağlayıcıya gitmeden yakalamak                      |
+| **Sağlayıcı konfigürasyonu**                                             | Eksik API anahtarı vb. hataları başlangıçta yakalamak             |
+| **Sağlayıcı ham yanıtı**                                                 | Sağlayıcının belgelenmemiş/değişmiş davranışını sessizce yutmamak |
+| **Webhook / callback girdisi** (3D Secure dönüşü, kargo durum bildirimi) | Dış dünyadan gelen güvenilmeyen veri                              |
 
 ### 5.3. Kurallar
+
 - `any` yasaktır; bilinmeyen veri `unknown` olarak alınır ve şema ile daraltılır.
 - Doğrulama hataları `ValidationError`'a dönüştürülür; Zod issue'ları `details.issues` alanında korunur.
 - Para birimi değerleri her zaman **kuruş cinsinden tam sayı** olarak taşınır; ondalık dönüşümü yalnızca mapper'larda yapılır.
@@ -195,10 +207,10 @@ export type Money = z.infer<typeof MoneySchema>;
 
 ### 6.1. İki kategori
 
-| Kategori | Örnekler | Nasıl iletilir |
-| --- | --- | --- |
-| **Beklenen (iş) hataları** | Kart reddedildi, yetersiz bakiye, geçersiz posta kodu | `Result` içinde `{ ok: false, error }` |
-| **Beklenmeyen (sistem) hataları** | Yanlış konfigürasyon, programlama hatası | `KopruError` olarak fırlatılır |
+| Kategori                          | Örnekler                                              | Nasıl iletilir                         |
+| --------------------------------- | ----------------------------------------------------- | -------------------------------------- |
+| **Beklenen (iş) hataları**        | Kart reddedildi, yetersiz bakiye, geçersiz posta kodu | `Result` içinde `{ ok: false, error }` |
+| **Beklenmeyen (sistem) hataları** | Yanlış konfigürasyon, programlama hatası              | `KopruError` olarak fırlatılır         |
 
 Ağ hataları ve zaman aşımları da `Result` ile döner, ancak `retryable: true` işaretiyle.
 
@@ -207,14 +219,14 @@ Ağ hataları ve zaman aşımları da `Result` ile döner, ancak `retryable: tru
 ```ts
 // kavramsal taslak
 class KopruError extends Error {
-  code: KopruErrorCode;          // "PAYMENT_CARD_DECLINED"
-  category: ErrorCategory;       // "validation" | "payment" | "cargo" | "provider" | "network" | "config"
-  message: string;               // İngilizce, geliştiriciye yönelik
-  userMessage?: string;          // Türkçe, son kullanıcıya gösterilebilir
+  code: KopruErrorCode; // "PAYMENT_CARD_DECLINED"
+  category: ErrorCategory; // "validation" | "payment" | "cargo" | "provider" | "network" | "config"
+  message: string; // İngilizce, geliştiriciye yönelik
+  userMessage?: string; // Türkçe, son kullanıcıya gösterilebilir
   retryable: boolean;
-  provider?: string;             // "iyzico"
-  providerCode?: string;         // Sağlayıcının ham hata kodu: "10051"
-  providerMessage?: string;      // Sağlayıcının ham mesajı
+  provider?: string; // "iyzico"
+  providerCode?: string; // Sağlayıcının ham hata kodu: "10051"
+  providerMessage?: string; // Sağlayıcının ham mesajı
   details?: Record<string, unknown>;
   cause?: unknown;
 }
@@ -223,6 +235,7 @@ class KopruError extends Error {
 Alt sınıflar: `ValidationError`, `PaymentError`, `CargoError`, `ProviderError`, `NetworkError`, `ConfigurationError`.
 
 ### 6.3. Hata kodu kataloğu
+
 Tüm kodlar core içinde tek bir katalogda tanımlanır ve `ALAN_ANLAM` formatındadır:
 
 ```
@@ -244,6 +257,7 @@ CARGO_SHIPMENT_NOT_FOUND
 Her sağlayıcı paketi, kendi ham kodlarını bu kataloğa eşleyen bir tablo tutar. Eşlenemeyen kodlar `PROVIDER_UNEXPECTED_RESPONSE` olarak döner ve ham bilgi korunur.
 
 ### 6.4. REST katmanında hatalar
+
 `@kopru/server`, hataları tutarlı bir JSON zarfı ile döner:
 
 ```json
@@ -291,15 +305,17 @@ HTTP durum kodu kategoriye göre belirlenir (`validation` → 422, `config` → 
 
 ## 10. Test Stratejisi
 
-| Seviye | Araç | Kapsam |
-| --- | --- | --- |
-| Birim | Vitest | Mapper'lar, şemalar, hata eşlemeleri |
+| Seviye              | Araç                       | Kapsam                                |
+| ------------------- | -------------------------- | ------------------------------------- |
+| Birim               | Vitest                     | Mapper'lar, şemalar, hata eşlemeleri  |
 | Sözleşme (contract) | Vitest + ortak test paketi | Her sağlayıcının core arayüzüne uyumu |
-| Entegrasyon | Vitest + mock-server | Uçtan uca akışlar |
-| Sandbox (opsiyonel) | Manuel / zamanlanmış CI | Gerçek sağlayıcı sandbox'ları |
+| Entegrasyon         | Vitest + mock-server       | Uçtan uca akışlar                     |
+| Sandbox (opsiyonel) | Manuel / zamanlanmış CI    | Gerçek sağlayıcı sandbox'ları         |
 
 ## 11. Mimari Karar Kayıtları (ADR)
-Önemli kararlar `docs/adr/NNNN-baslik.md` formatında kaydedilir. Bekleyen kararlar:
-- HTTP framework seçimi (Hono vs Fastify)
-- Build aracı (tsup vs unbuild)
-- `Result` tipinin kendi implementasyonumuz mu yoksa harici bir kütüphane mi olacağı
+
+Önemli kararlar `docs/adr/NNNN-baslik.md` formatında kaydedilir. Kayıtlı kararların listesi: [docs/adr/README.md](./docs/adr/README.md).
+
+Bekleyen kararlar:
+
+- `@kopru/server` için HTTP framework seçimi (Faz 2; mock server için Hono seçildi, bkz. ADR-0003)

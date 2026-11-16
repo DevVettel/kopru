@@ -14,16 +14,18 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 >
 > 📋 Görev bazlı detaylı uygulama planı: [docs/plans/PHASE-1.md](./docs/plans/PHASE-1.md)
 
-### 1.0 Altyapı ⬜
-- [ ] pnpm workspaces monorepo kurulumu
-- [ ] Paylaşılan `tsconfig` tabanı (strict mode)
-- [ ] ESLint + Prettier konfigürasyonu
-- [ ] Vitest kurulumu
-- [ ] Build aracı (tsup) ile ESM + CJS çıktı
-- [ ] CI pipeline (GitHub Actions): lint, typecheck, test, build
-- [ ] Changesets ile sürümleme altyapısı
+### 1.0 Altyapı ✅
+
+- [x] pnpm workspaces monorepo kurulumu
+- [x] Paylaşılan `tsconfig` tabanı (strict mode)
+- [x] ESLint + Prettier konfigürasyonu
+- [x] Vitest kurulumu
+- [x] Build aracı (tsup) ile ESM + CJS çıktı
+- [x] CI pipeline (GitHub Actions): lint, typecheck, test, build
+- [x] Changesets ile sürümleme altyapısı
 
 ### 1.1 `@kopru/core` ⬜
+
 - [ ] Primitives: `Money`, `Address`, `PhoneNumber`, `TCKN`, `VKN` Zod şemaları
 - [ ] `Result<T, E>` tipi ve yardımcıları
 - [ ] `KopruError` hiyerarşisi ve hata kodu kataloğu
@@ -36,6 +38,7 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [ ] Sağlayıcılar için ortak sözleşme test paketi (contract test suite)
 
 ### 1.2 Ödeme Sağlayıcısı: `@kopru/iyzico` ⬜
+
 > Seçim gerekçesi: Modern REST API, iyi belgelenmiş sandbox ortamı, Türkiye'de yaygın kullanım.
 
 - [ ] Konfigürasyon şeması (apiKey, secretKey, sandbox)
@@ -47,6 +50,7 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [ ] Contract test paketini geçme
 
 ### 1.3 Kargo Sağlayıcısı: `@kopru/yurtici` ⬜
+
 > Seçim gerekçesi: Pazar payı yüksek; SOAP tabanlı API'si, mimarinin "eski" protokolleri de soyutlayabildiğini kanıtlamak için iyi bir test.
 
 - [ ] Konfigürasyon şeması
@@ -59,6 +63,7 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [ ] Contract test paketini geçme
 
 ### 1.4 `@kopru/mock-server` ⬜
+
 - [ ] Sağlayıcıdan bağımsız mock sunucu çatısı
 - [ ] iyzico senaryoları: başarılı ödeme, kart reddi, yetersiz bakiye, 3DS akışı, iade, zaman aşımı
 - [ ] Yurtiçi senaryoları: gönderi oluşturma, geçersiz adres, takip hareketleri, bulunamayan gönderi
@@ -67,12 +72,14 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [ ] CLI ile bağımsız çalıştırılabilme
 
 ### 1.5 Dökümantasyon ve Örnekler ⬜
+
 - [ ] Her paket için Türkçe README
 - [ ] `examples/` altında ödeme + kargo kullanan basit bir Node.js örneği
 - [ ] "Yeni sağlayıcı nasıl eklenir" rehberi
 - [ ] `CONTRIBUTING.md`
 
 ### ✅ Faz 1 Tamamlanma Kriterleri
+
 - `pnpm install && pnpm test` temiz bir klonda, hiçbir gerçek kimlik bilgisi olmadan başarılı çalışır.
 - Örnek uygulama mock server'a karşı ödeme alır, 3DS akışını tamamlar, iade yapar, kargo oluşturur ve takip eder.
 - iyzico ve Yurtiçi paketleri contract test paketini geçer.
