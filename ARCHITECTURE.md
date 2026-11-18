@@ -242,17 +242,24 @@ Tüm kodlar core içinde tek bir katalogda tanımlanır ve `ALAN_ANLAM` formatı
 VALIDATION_FAILED
 CONFIG_INVALID
 NETWORK_TIMEOUT
+NETWORK_CONNECTION_FAILED
 PROVIDER_UNAVAILABLE
+PROVIDER_AUTHENTICATION_FAILED
 PROVIDER_CAPABILITY_NOT_SUPPORTED
 PROVIDER_UNEXPECTED_RESPONSE
 PAYMENT_CARD_DECLINED
 PAYMENT_INSUFFICIENT_FUNDS
+PAYMENT_CARD_EXPIRED
+PAYMENT_INVALID_CARD
 PAYMENT_THREEDS_FAILED
 PAYMENT_FRAUD_SUSPECTED
+PAYMENT_REFUND_FAILED
 CARGO_ADDRESS_INVALID
 CARGO_SHIPMENT_NOT_FOUND
-...
+CARGO_CANCELLATION_NOT_ALLOWED
 ```
+
+Katalog (`packages/core/src/errors/codes.ts`) her kod için kategoriyi, varsayılan `retryable` değerini ve son kullanıcıya yönelik varsayılan Türkçe `userMessage`'ı tek yerde tanımlar. Yeni bir kod önce kataloğa eklenir.
 
 Her sağlayıcı paketi, kendi ham kodlarını bu kataloğa eşleyen bir tablo tutar. Eşlenemeyen kodlar `PROVIDER_UNEXPECTED_RESPONSE` olarak döner ve ham bilgi korunur.
 

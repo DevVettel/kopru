@@ -24,11 +24,11 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [x] CI pipeline (GitHub Actions): lint, typecheck, test, build
 - [x] Changesets ile sürümleme altyapısı
 
-### 1.1 `@kopru/core` ⬜
+### 1.1 `@kopru/core` 🟨
 
-- [ ] Primitives: `Money`, `Address`, `PhoneNumber`, `TCKN`, `VKN` Zod şemaları
-- [ ] `Result<T, E>` tipi ve yardımcıları
-- [ ] `KopruError` hiyerarşisi ve hata kodu kataloğu
+- [x] Primitives: `Money`, `Address`, `PhoneNumber`, `TCKN`, `VKN`, `IBAN` Zod şemaları
+- [x] `Result<T, E>` tipi ve yardımcıları
+- [x] `KopruError` hiyerarşisi ve hata kodu kataloğu
 - [ ] `PaymentProvider` arayüzü ve ödeme alanı şemaları (`ChargeRequest`, `ChargeResult`, `RefundRequest`, 3DS modelleri)
 - [ ] `CargoProvider` arayüzü ve kargo alanı şemaları (`CreateShipmentRequest`, `Shipment`, `TrackingEvent`, `ShipmentStatus`)
 - [ ] `defineProvider` yardımcısı ve capability sistemi

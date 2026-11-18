@@ -62,7 +62,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M1 — Core Temelleri ⬜
+## M1 — Core Temelleri ✅
 
 **Amaç:** Tüm paketlerin kullanacağı değer tipleri, sonuç tipi ve hata sistemi.
 
@@ -79,6 +79,8 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M1.9 | `primitives/iban.ts`: `IBANSchema` (TR, mod-97 doğrulama)                                                                                        |                                                                                                      |
 
 **Bitti sayılır:** Tüm primitives için birim testleri (geçerli/geçersiz örnekler) geçer; kapsama ≥ %95.
+
+> ✅ 2026-11-18 tamamlandı: 95 birim testi; kapsama satır %100, dal %98.9. Ek olarak `unwrapOr`, `mapResult`, `validate()` (şema → `Result`), `createKopruError()` (koda göre alt sınıf) ve katalogda varsayılan Türkçe `userMessage` eklendi.
 
 ---
 
