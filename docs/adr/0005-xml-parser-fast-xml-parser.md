@@ -20,3 +20,7 @@ SOAP servisleri ve bazı banka API'leri XML ile çalışır. Hem XML oluşturma 
 
 - Bağımlılıksız, hızlı ve hem `parse` hem `build` destekleyen tek kütüphane.
 - Sağlayıcı paketleri fast-xml-parser'ı doğrudan değil, core yardımcıları üzerinden kullanır.
+
+## Ek Not (2026-11-18)
+
+fast-xml-parser 5.x içinde `XMLBuilder` ve `XMLValidator` deprecated olarak işaretlendi. Oluşturma için aynı ekibin ayırdığı **`fast-xml-builder`** paketi (fast-xml-parser'ın zaten kendi bağımlılığıdır) doğrudan kullanılır. Ayrıştırma öncesi iyi biçimlilik kontrolü için şimdilik fast-xml-parser içindeki `XMLValidator` kullanılır; kaldırılırsa `fast-xml-validator` paketine geçilir.

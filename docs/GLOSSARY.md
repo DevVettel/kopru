@@ -35,6 +35,10 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | Tutar                            | `amount` (`Money`)             | Her zaman kuruş cinsinden tam sayı.                                         |
 | Kuruş                            | minor unit                     | `Money.value` alanı kuruş cinsindendir; ayrı bir alan yoktur.               |
 | Hash / İmza                      | `signature`                    | İstek/yanıt bütünlüğü için hesaplanan değer.                                |
+| Sepet kalemi                     | `basketItem` (liste: `items`)  | Siparişteki tekil ürün; fiyatlar toplamı `amount`'a eşittir.                |
+| Kartın son 4 hanesi              | `cardLastFour`                 | Sonuçlarda kartı tanımlamak için; tam numara asla dönmez.                   |
+| 3D yönlendirmesi                 | `ThreeDSAction`                | `html` (sağlayıcı sayfası) veya `redirect` (URL + form alanları).           |
+| Yetenek                          | `capability`                   | Sağlayıcının desteklediği işlem; örn. `refund.partial`.                     |
 
 ## 📦 Kargo
 
@@ -57,6 +61,9 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | Ödeme tipi (gönderici/alıcı ödemeli) | `paymentType`: `sender` \| `recipient` |                                                                 |
 | Şube / Transfer merkezi              | `branch` / `hub`                       |                                                                 |
 | Teslim edildi                        | `delivered`                            |                                                                 |
+| Gönderi tarafı (gönderen/alıcı)      | `ShipmentContact`                      | Ad, telefon, e-posta ve adres.                                  |
+| Gönderi arama anahtarı               | `ShipmentLookup`                       | `referenceId` veya `trackingNumber` (en az biri).               |
+| Takip sonucu                         | `ShipmentTracking`                     | Gönderi + hareket listesi (`events`).                           |
 | İade edildi (kargo)                  | `returned`                             | Ödemedeki `refund` ile karıştırılmaz.                           |
 
 ### Standart `ShipmentStatus` değerleri

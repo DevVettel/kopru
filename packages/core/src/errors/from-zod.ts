@@ -26,6 +26,25 @@ export function formatIssuePath(path: readonly PropertyKey[]): string {
   }, '');
 }
 
+/**
+ * Zod issue'larını sadeleştirilmiş `ValidationIssue` listesine çevirir.
+ * Girdi değerleri (hassas veri içerebileceği için) kopyalanmaz.
+ */
+export function toValidationIssues(error: z.ZodError): ValidationIssue[] {
+  return error.issues.map((issue) => ({
+    path: formatIssuePath(issue.path),
+    code: issue.code,
+    message: issue.message,
+  }));
+}
+
+/**
+ * Doğrulama sorunlarını tek satırlık İngilizce özete çevirir: `name: Required; items[0].price: …`.
+ */
+export function summarizeIssues(issues: readonly ValidationIssue[]): string {
+  return issues.map((i) => (i.path === '' ? i.message : `${i.path}: ${i.message}`)).join('; ');
+}
+
 /** `fromZodError` seçenekleri. */
 export interface FromZodErrorOptions {
   /** Geliştiriciye yönelik İngilizce mesaj. */
@@ -43,15 +62,10 @@ export function fromZodError(
   error: z.ZodError,
   options: FromZodErrorOptions = {},
 ): ValidationError {
-  const issues: ValidationIssue[] = error.issues.map((issue) => ({
-    path: formatIssuePath(issue.path),
-    code: issue.code,
-    message: issue.message,
-  }));
-  const summary = issues.map((i) => (i.path === '' ? i.message : `${i.path}: ${i.message}`));
+  const issues = toValidationIssues(error);
 
   return new ValidationError({
-    message: options.message ?? `Validation failed: ${summary.join('; ')}`,
+    message: options.message ?? `Validation failed: ${summarizeIssues(issues)}`,
     ...(options.userMessage === undefined ? {} : { userMessage: options.userMessage }),
     details: { issues },
     cause: error,

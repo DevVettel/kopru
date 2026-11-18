@@ -91,26 +91,26 @@ Core, projenin "anayasası"dır. Sorumlulukları:
 
 ### 4.1. Sözleşme
 
-Her alan (domain) için core bir provider arayüzü tanımlar. Kavramsal olarak:
+Her alan (domain) için core bir provider arayüzü tanımlar. Sağlayıcılar bu arayüzü doğrudan yazmaz, `definePaymentProvider` / `defineCargoProvider` ile tanımlar:
 
 ```ts
-// @kopru/core — kavramsal taslak
-interface PaymentProvider {
-  readonly id: string; // "iyzico"
-  readonly capabilities: PaymentCapabilities; // { threeDS: true, installments: true, refund: true, ... }
-
-  charge(input: ChargeRequest, ctx: ProviderContext): Promise<Result<ChargeResult, KopruError>>;
-  initThreeDS(
-    input: ChargeRequest,
-    ctx: ProviderContext,
-  ): Promise<Result<ThreeDSInitResult, KopruError>>;
-  completeThreeDS(
-    input: ThreeDSCallback,
-    ctx: ProviderContext,
-  ): Promise<Result<ChargeResult, KopruError>>;
-  refund(input: RefundRequest, ctx: ProviderContext): Promise<Result<RefundResult, KopruError>>;
-}
+// packages/payment-iyzico/src/provider.ts (taslak)
+export const iyzico = definePaymentProvider({
+  id: 'iyzico',
+  configSchema: IyzicoConfigSchema, // hatalı config → ConfigurationError (fırlatılır)
+  capabilities: ['charge', 'threeDS', 'refund'],
+  create: (config) => ({
+    charge: async (input, ctx) => { … },          // ctx.http, ctx.now, ctx.signal
+    initThreeDS: async (input, ctx) => { … },
+    completeThreeDS: async (input, ctx) => { … },
+    refund: async (input, ctx) => { … },
+  }),
+});
 ```
+
+- Metotlar `(doğrulanmış girdi, ProviderContext) => Promise<Result<Çıktı, KopruError>>` imzasındadır.
+- `ProviderContext` her çağrıda client tarafından enjekte edilir: `http` (core HTTP istemcisi), `now` (zaman kaynağı), `signal` (iptal).
+- Bildirilen yeteneklerle uygulanan metotlar tutarlı olmalıdır; aksi halde fabrika `ConfigurationError` fırlatır.
 
 ### 4.2. Sağlayıcı paketi anatomisi
 
@@ -158,7 +158,18 @@ Result<ChargeResult, KopruError>
 
 ### 4.4. Capability sistemi
 
-Her sağlayıcı her özelliği desteklemez (örn. kısmi iade, taksit sorgulama, kargo iptali). Sağlayıcı, desteklediği yetenekleri statik olarak bildirir. Desteklenmeyen bir işlem çağrılırsa ağ isteği yapılmadan `PROVIDER_CAPABILITY_NOT_SUPPORTED` hatası döner. Böylece kullanıcı, çalışma zamanında `client.supports('refund.partial')` ile kontrol yapabilir.
+Her sağlayıcı her özelliği desteklemez (örn. kısmi iade, taksit, kargo iptali). Sağlayıcı, desteklediği yetenekleri statik olarak bir metin listesiyle bildirir:
+
+| Alan  | Yetenekler                                                            |
+| ----- | --------------------------------------------------------------------- |
+| Ödeme | `charge`, `threeDS`, `refund`, `refund.partial`, `installments`       |
+| Kargo | `createShipment`, `cancelShipment`, `trackShipment`, `cashOnDelivery` |
+
+Client, girdiye göre gereken yetenekleri de hesaplar (örn. `installments > 1` → `installments`, `amount` verilmiş iade → `refund.partial`, `cashOnDelivery` verilmiş gönderi → `cashOnDelivery`). Desteklenmeyen bir işlem çağrılırsa ağ isteği yapılmadan `PROVIDER_CAPABILITY_NOT_SUPPORTED` hatası döner. Kullanıcı çalışma zamanında `client.supports('refund.partial')` ile kontrol yapabilir.
+
+### 4.4.1. Sözleşme testleri
+
+`@kopru/core/testing` (yalnızca ESM, Vitest gerektirir) `runPaymentProviderContract` ve `runCargoProviderContract` test paketlerini sunar. Paketler; kimlik ve yetenek tutarlılığını, girdi doğrulamasının ağdan önce yapıldığını, desteklenmeyen yeteneklerin ağ isteği olmadan reddedildiğini ve desteklenen işlemlerin şemaya uygun sonuç döndüğünü doğrular.
 
 ### 4.5. Yeni sağlayıcı ekleme kontrol listesi
 

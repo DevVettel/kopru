@@ -84,7 +84,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M2 — Core Sağlayıcı Katmanı ⬜
+## M2 — Core Sağlayıcı Katmanı ✅
 
 **Amaç:** Sağlayıcıların uyacağı sözleşmeler ve kullanacağı ortak altyapı.
 
@@ -104,6 +104,13 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M2.12 | `testing/` alt export'u (`@kopru/core/testing`): sağlayıcılar için **contract test paketi**                                                                                                            | `runPaymentProviderContract(provider, fixtures)` / `runCargoProviderContract(...)` |
 
 **Bitti sayılır:** Sahte (in-memory) bir `PaymentProvider` ve `CargoProvider` contract test paketini geçer; client akışı uçtan uca test edilmiştir.
+
+> ✅ 2026-11-18 tamamlandı: 4 sahte sağlayıcı (tam ve kısıtlı yetenekli ödeme/kargo) sözleşme paketlerini geçer; toplam 186 test, kapsama satır %99.7 / dal %98.3 (`src/testing` hariç). Notlar:
+>
+> - Yetenekler nesne yerine metin listesiyle bildirilir (`['charge', 'refund.partial']`); client girdiye göre gereken yetenekleri hesaplar.
+> - `fast-xml-builder` doğrudan bağımlılık olarak eklendi (ADR-0005 ek notu).
+> - `@kopru/core/testing` yalnızca ESM'dir (Vitest CommonJS'ten yüklenemez).
+> - Ek: `utils/date.ts` (`formatIstanbulDateTime`, `DateTimeSchema`), `safeEqual` (callback imza doğrulaması için).
 
 ---
 

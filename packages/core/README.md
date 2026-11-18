@@ -6,11 +6,18 @@ Köprü'nün çekirdek paketi. Tüm sağlayıcı paketlerinin (`@kopru/iyzico`, 
 
 ## İçerik
 
-| Modül        | Dışa aktarılanlar                                                                                                                                  |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `result`     | `Result<T, E>`, `ok`, `err`, `isOk`, `isErr`, `unwrap`, `unwrapOr`, `mapResult`                                                                    |
-| `errors`     | `KopruError` ve alt sınıfları, `ERROR_CATALOG`, `createKopruError`, `fromZodError`, `validate`                                                     |
-| `primitives` | `MoneySchema` (+ `toDecimalString` / `fromDecimalString`), `TCKNSchema`, `VKNSchema`, `PhoneNumberSchema`, `AddressSchema`, `CITIES`, `IBANSchema` |
+| Modül                 | Dışa aktarılanlar                                                                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `result`              | `Result<T, E>`, `ok`, `err`, `isOk`, `isErr`, `unwrap`, `unwrapOr`, `mapResult`                                                                    |
+| `errors`              | `KopruError` ve alt sınıfları, `ERROR_CATALOG`, `createKopruError`, `fromZodError`, `validate`                                                     |
+| `primitives`          | `MoneySchema` (+ `toDecimalString` / `fromDecimalString`), `TCKNSchema`, `VKNSchema`, `PhoneNumberSchema`, `AddressSchema`, `CITIES`, `IBANSchema` |
+| `domain/payment`      | `ChargeRequestSchema`, `ChargeResultSchema`, `ThreeDSInitRequestSchema`, `ThreeDSInitResultSchema`, `RefundRequestSchema`, `PaymentProvider`       |
+| `domain/cargo`        | `CreateShipmentRequestSchema`, `ShipmentSchema`, `ShipmentTrackingSchema`, `TrackingEventSchema`, `ShipmentStatusSchema`, `CargoProvider`          |
+| `provider`            | `definePaymentProvider`, `defineCargoProvider`, `supports`, `ProviderContext`                                                                      |
+| `http`                | `createHttpClient` (timeout, idempotent retry, maskeli log kancaları), `redact*` yardımcıları                                                      |
+| `utils`               | `hash`, `hmac`, `safeEqual`, `base64*`, `parseXml`, `buildXml`, `buildSoapEnvelope`, `parseSoapEnvelope`, `formatIstanbulDateTime`                 |
+| `client`              | `createPaymentClient`, `createCargoClient`                                                                                                         |
+| `@kopru/core/testing` | `runPaymentProviderContract`, `runCargoProviderContract`, `createRecordingHttpClient` (yalnızca ESM, Vitest gerektirir)                            |
 
 ## Örnek
 
@@ -25,6 +32,27 @@ if (result.ok) {
 }
 
 PhoneNumberSchema.parse('0532 123 45 67'); // "+905321234567"
+```
+
+### Sağlayıcı kullanımı
+
+```ts
+import { createPaymentClient } from '@kopru/core';
+
+const payments = createPaymentClient({
+  provider: someProvider({ apiKey: '…' }), // örn. @kopru/iyzico
+  http: { timeoutMs: 15_000, hooks: { onRequest: (e) => console.log(e) } }, // log verisi maskelenmiştir
+});
+
+if (payments.supports('refund.partial')) {
+  // …
+}
+const result = await payments.charge({
+  orderId: 'S-1',
+  amount: { value: 1050, currency: 'TRY' },
+  card,
+  buyer,
+});
 ```
 
 ## İlkeler

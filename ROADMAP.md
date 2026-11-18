@@ -24,18 +24,18 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [x] CI pipeline (GitHub Actions): lint, typecheck, test, build
 - [x] Changesets ile sürümleme altyapısı
 
-### 1.1 `@kopru/core` 🟨
+### 1.1 `@kopru/core` ✅
 
 - [x] Primitives: `Money`, `Address`, `PhoneNumber`, `TCKN`, `VKN`, `IBAN` Zod şemaları
 - [x] `Result<T, E>` tipi ve yardımcıları
 - [x] `KopruError` hiyerarşisi ve hata kodu kataloğu
-- [ ] `PaymentProvider` arayüzü ve ödeme alanı şemaları (`ChargeRequest`, `ChargeResult`, `RefundRequest`, 3DS modelleri)
-- [ ] `CargoProvider` arayüzü ve kargo alanı şemaları (`CreateShipmentRequest`, `Shipment`, `TrackingEvent`, `ShipmentStatus`)
-- [ ] `defineProvider` yardımcısı ve capability sistemi
-- [ ] Ortak HTTP istemcisi (timeout, retry, hassas veri maskeleme)
-- [ ] Yardımcılar: HMAC/hash imzalama, XML ↔ JSON dönüşümü
-- [ ] `createPaymentClient` ve `createCargoClient` fabrika fonksiyonları
-- [ ] Sağlayıcılar için ortak sözleşme test paketi (contract test suite)
+- [x] `PaymentProvider` arayüzü ve ödeme alanı şemaları (`ChargeRequest`, `ChargeResult`, `RefundRequest`, 3DS modelleri)
+- [x] `CargoProvider` arayüzü ve kargo alanı şemaları (`CreateShipmentRequest`, `Shipment`, `TrackingEvent`, `ShipmentStatus`)
+- [x] `defineProvider` yardımcısı ve capability sistemi
+- [x] Ortak HTTP istemcisi (timeout, retry, hassas veri maskeleme)
+- [x] Yardımcılar: HMAC/hash imzalama, XML ↔ JSON dönüşümü
+- [x] `createPaymentClient` ve `createCargoClient` fabrika fonksiyonları
+- [x] Sağlayıcılar için ortak sözleşme test paketi (contract test suite)
 
 ### 1.2 Ödeme Sağlayıcısı: `@kopru/iyzico` ⬜
 

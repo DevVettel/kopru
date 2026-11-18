@@ -27,6 +27,12 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./testing": {
+      "import": {
+        "types": "./dist/testing/index.d.ts",
+        "default": "./dist/testing/index.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -42,6 +48,19 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "fast-xml-builder": "^1.3.2",
+    "fast-xml-parser": "^5.12.1",
+    "zod": "^4.6.7"
+  },
+  "peerDependencies": {
+    "vitest": "^5.1.0"
+  },
+  "peerDependenciesMeta": {
+    "vitest": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@kopru/eslint-config": "workspace:*",
     "@kopru/tsconfig": "workspace:*",
@@ -51,8 +70,5 @@
     "tsup": "^9.0.0",
     "typescript": "~6.0.3",
     "vitest": "^5.1.0"
-  },
-  "dependencies": {
-    "zod": "^4.6.7"
   }
 }
