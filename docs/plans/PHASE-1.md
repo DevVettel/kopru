@@ -114,7 +114,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M3 — Mock Server Çatısı ⬜
+## M3 — Mock Server Çatısı ✅
 
 **Amaç:** Sağlayıcı senaryolarının eklenebileceği, testlerden programatik başlatılabilen sunucu.
 
@@ -128,6 +128,13 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M3.6 | 3DS simülasyonu için basit HTML sayfası (otomatik form-post ile callback'e dönüş)                    |                                                          |
 
 **Bitti sayılır:** Örnek bir "echo" senaryosu ile sunucu testlerden başlatılıp durdurulabiliyor.
+
+> ✅ 2026-11-19 tamamlandı: `echo` eklentisi ile sunucu hem test içinden hem Vitest `globalSetup` üzerinden başlatılıp durduruluyor; 74 test, `mock-server/src` kapsaması satır %97.8 / dal %96 (`cli.ts` giriş dosyası hariç; kalanlar savunma amaçlı hata dalları). Notlar:
+>
+> - Sağlayıcı senaryoları `packages/mock-server/src/plugins/<sağlayıcı>/` altında yaşar; sağlayıcı paketleri yalnızca core'a bağımlı kalır ve mock, sağlayıcının ham HTTP sözleşmesine göre yazılır.
+> - İstek kaydı core'un maskeleme yardımcılarından geçer; kart numarası, CVC, `Authorization` ve TCKN açık tutulmaz. Başka süreçteki sunucunun kaydı `/__kopru/requests` ve `createMockServerClient` ile sorgulanır.
+> - 3DS simülasyonu `renderAutoPostPage` ile; eklentiler 3DS yönlendirme adreslerini `context.baseUrl()` ile üretir.
+> - Sunucu `@hono/node-server`'ın `getRequestListener`'ı ile Node `http.createServer` üzerine kurulur; `stop()` açık bağlantıları da kapatır.
 
 ---
 

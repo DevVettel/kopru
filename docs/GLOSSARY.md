@@ -111,3 +111,13 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | Açık adres      | `addressLine`                         |                                             |
 | Posta kodu      | `postalCode`                          |                                             |
 | Telefon         | `phone`                               | E.164 formatında (`+905xxxxxxxxx`).         |
+
+## 🧪 Test Altyapısı (Mock Server)
+
+| Türkçe Terim       | Kod Karşılığı                     | Açıklama                                                                        |
+| ------------------ | --------------------------------- | ------------------------------------------------------------------------------- |
+| Eklenti            | `MockPlugin` (`defineMockPlugin`) | Bir sağlayıcının mock route'larını ve senaryolarını kaydeden birim.             |
+| Senaryo            | `ScenarioDescriptor`              | Belirli bir girdinin (test kartı, takip no) ürettiği deterministik sonuç.       |
+| Tetikleyici        | `trigger`                         | Senaryoyu başlatan girdi.                                                       |
+| İstek kaydı        | `RequestLog`, `RecordedRequest`   | Mock server'a gelen isteklerin maskelenmiş kaydı.                               |
+| Otomatik form-post | `renderAutoPostPage`              | 3DS sonucunu tarayıcı üzerinden callback adresine POST eden simülasyon sayfası. |

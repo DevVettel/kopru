@@ -62,14 +62,14 @@ Bu döküman Köprü'nün geliştirme fazlarını ve her fazın tamamlanma krite
 - [ ] Hata kodu eşleme tablosu
 - [ ] Contract test paketini geçme
 
-### 1.4 `@kopru/mock-server` ⬜
+### 1.4 `@kopru/mock-server` 🟨
 
-- [ ] Sağlayıcıdan bağımsız mock sunucu çatısı
+- [x] Sağlayıcıdan bağımsız mock sunucu çatısı
 - [ ] iyzico senaryoları: başarılı ödeme, kart reddi, yetersiz bakiye, 3DS akışı, iade, zaman aşımı
 - [ ] Yurtiçi senaryoları: gönderi oluşturma, geçersiz adres, takip hareketleri, bulunamayan gönderi
 - [ ] Deterministik test verileri (test kartları, takip numaraları) dökümantasyonu
-- [ ] Vitest entegrasyon testlerinde programatik olarak başlatılabilme
-- [ ] CLI ile bağımsız çalıştırılabilme
+- [x] Vitest entegrasyon testlerinde programatik olarak başlatılabilme
+- [x] CLI ile bağımsız çalıştırılabilme
 
 ### 1.5 Dökümantasyon ve Örnekler ⬜
 

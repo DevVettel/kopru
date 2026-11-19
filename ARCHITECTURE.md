@@ -311,6 +311,9 @@ HTTP durum kodu kategoriye göre belirlenir (`validation` → 422, `config` → 
 - Senaryolar deterministiktir: belirli test kart numaraları / takip numaraları belirli sonuçları üretir (başarı, ret, 3DS, zaman aşımı).
 - 3D Secure yönlendirme ve callback akışını simüle eder.
 - Hem yerel geliştirme hem CI testlerinde kullanılır.
+- Sağlayıcı senaryoları `MockPlugin` olarak mock-server paketinin içinde (`src/plugins/<sağlayıcı>/`) tanımlanır. Mock-server yalnızca `@kopru/core`'a bağımlıdır, sağlayıcı paketlerini import etmez; mock'lar sağlayıcının ham HTTP sözleşmesine göre yazılır.
+- Gelen istekler maskelenmiş olarak kaydedilir ve `/__kopru/requests` yönetim uç noktasından (veya aynı süreçte `server.requests`) sorgulanır; testler "sağlayıcıya şu istek gitti mi?" doğrulamasını buradan yapar.
+- Programatik API: `startMockServer({ port: 0 })` → `{ url, requests, stop() }`; CLI: `kopru-mock --port 4010`.
 
 ---
 
