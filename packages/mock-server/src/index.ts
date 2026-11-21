@@ -51,4 +51,4 @@ export {
   type PluginInfo,
 } from './client.js';
 
-export { BUILTIN_PLUGINS, ECHO_MAX_DELAY_MS, echoPlugin } from './plugins/index.js';
+export * from './plugins/index.js';

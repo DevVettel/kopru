@@ -138,7 +138,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M4: `@kopru/iyzico` ⬜
+## M4: `@kopru/iyzico` ✅
 
 **Amaç:** iyzico ile non-3DS ödeme, 3DS ödeme ve tam iade.
 
@@ -156,6 +156,8 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M4.9 | Paket README'si (Türkçe)                                                                                                                                         |                                                   |
 
 **Bitti sayılır:** Contract testleri ve tüm mock senaryoları geçer; sandbox'a karşı manuel duman testi (opsiyonel, kimlik bilgisi varsa) yapılmıştır.
+
+**Durum (2026-11-21):** M4.0–M4.9 tamamlandı. Kararlar [`packages/payment-iyzico/NOTES.md`](../../packages/payment-iyzico/NOTES.md) §6'da: eksik iyzico zorunlu alanlarında `VALIDATION_FAILED`; tam iade için detay → `/v2/payment/refund`, `10223`'te `/payment/cancel`; 3DS tamamlamada v1 uç noktası (v2 Faz 2'de değerlendirilecek). Sandbox duman testi kimlik bilgisi olmadığından yapılmadı.
 
 ---
 

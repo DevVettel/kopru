@@ -3,7 +3,7 @@
 Köprü'nün sağlayıcı taklit sunucusu. Sağlayıcıların HTTP API'lerini deterministik senaryolarla taklit eder. Böylece gerçek bir sağlayıcı hesabı açmadan bütün akışları (3D Secure dâhil) yerelde ve CI'da test edebilirsiniz. Sağlayıcı paketlerini mock'a yönlendirmek için yalnızca `baseUrl` değerini değiştirmek yeterli.
 
 > [!WARNING]
-> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Şu an yalnızca örnek `echo` eklentisi var. iyzico ve Yurtiçi senaryoları M4 ve M5'te eklenecek ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
+> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Yerleşik eklentiler: örnek `echo` ve `iyzico`. Yurtiçi senaryoları M5'te eklenecek ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
 
 ## Testlerden Kullanım (Vitest `globalSetup`)
 
@@ -74,6 +74,36 @@ Kayda alınan isteklerin başlıkları, sorgu parametreleri ve gövdesi `@kopru/
 | `status`   | `GET /echo/status/:code`               | Verilen durum koduyla yanıt (200–599; 204/205/304 hariç)   |
 | `delay`    | `GET /echo/delay/:ms`                  | Yanıtı geciktirir (en fazla 30 sn); zaman aşımı testleri   |
 | `three-ds` | `GET /echo/3ds?callbackUrl=…&status=…` | `status` alanını callback'e otomatik POST eden 3DS sayfası |
+
+### `iyzico` (`/iyzico`)
+
+iyzico API'sinin (`/payment/auth`, `/payment/3dsecure/initialize`, `/payment/3dsecure/auth`, `/payment/detail`, `/v2/payment/refund`, `/payment/cancel`) taklidi. Her istekte IYZWSv2 imzası doğrulanır; kimlik bilgileri `IYZICO_MOCK_API_KEY` ve `IYZICO_MOCK_SECRET_KEY` sabitleriyle dışa aktarılır. Ödemeler sunucu ömrü boyunca bellekte tutulur; ödeme kimlikleri `10000001`'den başlayarak artar.
+
+Kart numaraları iyzico'nun resmi sandbox test kartlarıyla aynıdır (zaman aşımı kartı hariç):
+
+| Kart numarası      | Sonuç                                                          |
+| ------------------ | -------------------------------------------------------------- |
+| `5528790000000008` | Başarılı. Aynı gün sayılır: iade `10223` döner, iptal başarılı |
+| `5400360000000003` | Başarılı. Gün sonu yapılmış sayılır: tutar bazlı iade başarılı |
+| `5406670000000009` | Başarılı; iade ve iptal `10202` ile başarısız                  |
+| `4111111111111129` | `10051` yetersiz bakiye                                        |
+| `4129111111111111` | `10005` işlem onaylanmadı                                      |
+| `4128111111111112` | `10012` geçersiz işlem                                         |
+| `4127111111111113` | `10041` kayıp kart                                             |
+| `4126111111111114` | `10043` çalıntı kart                                           |
+| `4125111111111115` | `10054` son kullanma tarihi hatalı                             |
+| `4124111111111116` | `10084` hatalı CVC2                                            |
+| `4123111111111117` | `10057` kart sahibi bu işlemi yapamaz                          |
+| `4122111111111118` | `10058` terminal yetkisiz                                      |
+| `4121111111111119` | `10034` dolandırıcılık şüphesi                                 |
+| `4120111111111110` | `10041` karta el koyunuz                                       |
+| `4130111111111118` | `10202` genel hata                                             |
+| `4131111111111117` | 3DS: callback `status=failure`, `mdStatus=0`                   |
+| `4141111111111115` | 3DS: callback `status=failure`, `mdStatus=4`                   |
+| `4151111111111112` | 3DS başlatma `10202` ile başarısız                             |
+| `4000000000000002` | Köprü'ye özgü: yanıt 10 sn gecikir (zaman aşımı testleri)      |
+
+Hata kartları non-3DS tahsilatta hemen, 3DS akışında ise `/payment/3dsecure/auth` aşamasında hata döner. 3DS başlatma yanıtındaki `threeDSHtmlContent`, callback alanlarını (`status`, `paymentId`, `conversationData`, `conversationId`, `mdStatus`) `callbackUrl` adresine otomatik POST eden bir sayfadır. Hatalı imza `1000`, sepet toplamı uyuşmazlığı `5062`, çözülemeyen gövde `11`, bulunamayan ödeme `5087` döner.
 
 ## Eklenti Yazmak
 

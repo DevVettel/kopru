@@ -37,17 +37,17 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 - [x] `createPaymentClient` ve `createCargoClient` fabrika fonksiyonları
 - [x] Sağlayıcılar için ortak sözleşme test paketi (contract test suite)
 
-### 1.2 Ödeme Sağlayıcısı: `@kopru/iyzico` ⬜
+### 1.2 Ödeme Sağlayıcısı: `@kopru/iyzico` ✅
 
 > Seçim gerekçesi: Modern REST API, iyi belgelenmiş sandbox ortamı, Türkiye'de yaygın kullanım.
 
-- [ ] Konfigürasyon şeması (apiKey, secretKey, sandbox)
-- [ ] Kimlik doğrulama / istek imzalama
-- [ ] Doğrudan ödeme (Non-3DS)
-- [ ] 3D Secure başlatma ve tamamlama
-- [ ] İade (tam iade)
-- [ ] Hata kodu eşleme tablosu
-- [ ] Contract test paketini geçme
+- [x] Konfigürasyon şeması (apiKey, secretKey, sandbox)
+- [x] Kimlik doğrulama / istek imzalama
+- [x] Doğrudan ödeme (Non-3DS)
+- [x] 3D Secure başlatma ve tamamlama
+- [x] İade (tam iade)
+- [x] Hata kodu eşleme tablosu
+- [x] Contract test paketini geçme
 
 ### 1.3 Kargo Sağlayıcısı: `@kopru/yurtici` ⬜
 
@@ -65,7 +65,7 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 ### 1.4 `@kopru/mock-server` 🟨
 
 - [x] Sağlayıcıdan bağımsız mock sunucu çatısı
-- [ ] iyzico senaryoları: başarılı ödeme, kart reddi, yetersiz bakiye, 3DS akışı, iade, zaman aşımı
+- [x] iyzico senaryoları: başarılı ödeme, kart reddi, yetersiz bakiye, 3DS akışı, iade, zaman aşımı
 - [ ] Yurtiçi senaryoları: gönderi oluşturma, geçersiz adres, takip hareketleri, bulunamayan gönderi
 - [ ] Deterministik test verileri (test kartları, takip numaraları) dokümantasyonu
 - [x] Vitest entegrasyon testlerinde programatik olarak başlatılabilme

@@ -1,0 +1,71 @@
+{
+  "name": "@kopru/iyzico",
+  "version": "0.0.0",
+  "description": "Köprü iyzico ödeme sağlayıcısı: non-3DS tahsilat, 3D Secure ve tam iade.",
+  "keywords": [
+    "kopru",
+    "iyzico",
+    "payment",
+    "3d-secure",
+    "turkey"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevVettel/kopru.git",
+    "directory": "packages/payment-iyzico"
+  },
+  "homepage": "https://github.com/DevVettel/kopru/tree/main/packages/payment-iyzico#readme",
+  "bugs": {
+    "url": "https://github.com/DevVettel/kopru/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf dist coverage .turbo"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@kopru/core": "workspace:*",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@kopru/eslint-config": "workspace:*",
+    "@kopru/mock-server": "workspace:*",
+    "@kopru/tsconfig": "workspace:*",
+    "@kopru/tsup-config": "workspace:*",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.15.0",
+    "tsup": "^9.0.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  }
+}
