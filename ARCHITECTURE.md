@@ -1,6 +1,6 @@
-# Köprü — Mimari Tasarım Dökümanı
+# Mimari Tasarım Dokümanı
 
-Bu döküman Köprü'nün teknik mimarisini, paket yapısını ve temel tasarım kararlarını tanımlar. Kod yazılırken bu döküman referans alınır; mimariyi değiştiren her karar önce burada güncellenir.
+Köprü'nün teknik mimarisi, paket yapısı ve temel tasarım kararları bu dokümanda. Kod yazılırken referans burasıdır, mimariyi değiştiren her karar da önce burada güncellenir.
 
 ---
 
@@ -17,7 +17,7 @@ Bu döküman Köprü'nün teknik mimarisini, paket yapısını ve temel tasarım
 
 ## 2. Monorepo Yapısı (pnpm workspaces)
 
-Proje, **pnpm workspaces** ile yönetilen bir monorepodur. Derleme orkestrasyonu için Turborepo, sürümleme ve yayımlama için Changesets kullanılması planlanmaktadır.
+Proje, **pnpm workspaces** ile yönetilen bir monorepodur. Derlemeyi Turborepo yönetir, sürümleme ve yayımlama için Changesets kullanılır.
 
 ```
 kopru/
@@ -31,7 +31,7 @@ kopru/
 │   ├── tsconfig/              # Paylaşılan tsconfig tabanları (strict)
 │   └── eslint-config/         # Paylaşılan lint kuralları
 ├── examples/                  # Örnek uygulamalar
-├── docs/                      # Ek dökümanlar, ADR'ler
+├── docs/                      # Ek dokümanlar, ADR'ler
 ├── pnpm-workspace.yaml
 ├── package.json
 ├── README.md
@@ -299,9 +299,9 @@ HTTP durum kodu kategoriye göre belirlenir (`validation` → 422, `config` → 
 
 ## 7. `@kopru/server` (JSON/REST Ara Katmanı)
 
-- Hafif bir HTTP framework'ü (Hono veya Fastify — ADR ile kararlaştırılacak) üzerine kurulur.
+- Hafif bir HTTP framework'ü (Hono ya da Fastify, seçim bir ADR ile yapılacak) üzerine kurulur.
 - Endpoint'ler alan bazlıdır: `POST /v1/payments/charge`, `POST /v1/cargo/shipments`, `GET /v1/cargo/shipments/:id/tracking`.
-- İstek/yanıt şemaları core'daki Zod şemalarının aynısıdır; OpenAPI dökümanı bu şemalardan otomatik üretilir.
+- İstek/yanıt şemaları core'daki Zod şemalarının aynısıdır; OpenAPI dokümanı bu şemalardan otomatik üretilir.
 - Idempotency-Key başlığı desteklenir.
 - Kimlik bilgileri ortam değişkenleri veya konfigürasyon dosyası ile sağlanır; asla loglanmaz.
 

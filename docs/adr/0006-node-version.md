@@ -1,4 +1,4 @@
-# 0006 — Desteklenen Node.js sürümleri
+# 0006: Desteklenen Node.js sürümleri
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-11-16

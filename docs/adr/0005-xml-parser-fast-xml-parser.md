@@ -1,4 +1,4 @@
-# 0005 — XML ayrıştırıcı olarak fast-xml-parser
+# 0005: XML ayrıştırıcı olarak fast-xml-parser
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-11-16

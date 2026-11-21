@@ -1,4 +1,4 @@
-# 0001 — Build aracı olarak tsup
+# 0001: Build aracı olarak tsup
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-11-16

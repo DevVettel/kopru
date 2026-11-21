@@ -1,8 +1,9 @@
 # @kopru/mock-server
 
-Köprü sağlayıcı taklit sunucusu. Sağlayıcıların HTTP API'lerini deterministik senaryolarla taklit eder; böylece gerçek sağlayıcı hesabı açmadan, yerelde ve CI'da tüm akışlar (3D Secure dahil) test edilebilir. Sağlayıcı paketleri yalnızca `baseUrl` değiştirilerek mock'a yönlendirilir.
+Köprü'nün sağlayıcı taklit sunucusu. Sağlayıcıların HTTP API'lerini deterministik senaryolarla taklit eder. Böylece gerçek bir sağlayıcı hesabı açmadan bütün akışları (3D Secure dâhil) yerelde ve CI'da test edebilirsiniz. Sağlayıcı paketlerini mock'a yönlendirmek için yalnızca `baseUrl` değerini değiştirmek yeterli.
 
-> ⚠️ Paket henüz geliştirme aşamasındadır ve npm'de yayımlanmamıştır. Şu an yalnızca örnek `echo` eklentisi bulunur; iyzico ve Yurtiçi senaryoları M4/M5 kapsamında eklenecektir ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
+> [!WARNING]
+> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Şu an yalnızca örnek `echo` eklentisi var. iyzico ve Yurtiçi senaryoları M4 ve M5'te eklenecek ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
 
 ## Testlerden Kullanım (Vitest `globalSetup`)
 
@@ -48,7 +49,7 @@ kopru-mock --port 4010          # varsayılan: 127.0.0.1:4010
 kopru-mock -p 0 -H 0.0.0.0 -q   # rastgele port, tüm arayüzler, istekleri yazma
 ```
 
-Gelen her istek maskelenmiş olarak tek satır halinde konsola yazılır. `Ctrl+C` ile sunucu düzgün kapatılır.
+Gelen her istek maskelenmiş olarak tek satır hâlinde konsola yazılır. `Ctrl+C` ile sunucu düzgün kapatılır.
 
 ## Yönetim Uç Noktaları
 

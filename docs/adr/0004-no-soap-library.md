@@ -1,4 +1,4 @@
-# 0004 — Harici SOAP kütüphanesi kullanılmaması
+# 0004: Harici SOAP kütüphanesi kullanılmaması
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-11-16

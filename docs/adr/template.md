@@ -1,4 +1,4 @@
-# NNNN — Başlık
+# NNNN: Başlık
 
 - **Durum:** Önerildi | Kabul edildi | Reddedildi | Yerini aldı (→ NNNN)
 - **Tarih:** YYYY-AA-GG

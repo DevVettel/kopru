@@ -1,70 +1,78 @@
-# 🌉 Köprü
+<div align="center">
 
-> **Türkiye'nin ödeme, kargo ve e-Dönüşüm altyapıları için tek bir standart arayüz.**
+# Köprü
 
-Köprü; Türkiye'deki banka sanal POS'larını, ödeme kuruluşlarını (iyzico, PayTR vb.), kargo firmalarını (Yurtiçi, Aras vb.) ve e-Fatura / e-Arşiv entegratörlerini **tek bir tutarlı, tip güvenli TypeScript API'si** ve **standart JSON/REST arayüzü** altında birleştiren açık kaynak bir ara katman (middleware) ve kütüphanedir.
+**Türkiye'nin ödeme, kargo ve e-Dönüşüm altyapıları için tek bir TypeScript API'si**
 
-Stripe ve Plaid'in global ekosisteme getirdiği geliştirici deneyimini, yerel ekosisteme getirmeyi hedefliyoruz.
+[![CI](https://github.com/DevVettel/kopru/actions/workflows/ci.yml/badge.svg)](https://github.com/DevVettel/kopru/actions/workflows/ci.yml)
+[![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue.svg)](./LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%5E22.18%20%7C%7C%20%3E%3D24.11-339933?logo=nodedotjs&logoColor=white)](./docs/adr/0006-node-version.md)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](./tooling/tsconfig)
+[![pnpm](https://img.shields.io/badge/pnpm-10-F69220?logo=pnpm&logoColor=white)](https://pnpm.io)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org/tr/v1.0.0/)
 
-> ⚠️ **Durum:** Proje tasarım aşamasındadır. Henüz kullanıma hazır bir paket yayımlanmamıştır. Yol haritası için [ROADMAP.md](./ROADMAP.md) dosyasına bakın.
+[Mimari](./ARCHITECTURE.md) · [Yol haritası](./ROADMAP.md) · [Katkı rehberi](./CONTRIBUTING.md) · [Terimler sözlüğü](./docs/GLOSSARY.md)
 
----
-
-## 🧩 Çözdüğümüz Problem
-
-Türkiye'de bir e-ticaret ya da SaaS ürünü geliştiren her ekip, aynı zahmetli yolu tekrar tekrar yürür:
-
-| Problem                     | Bugünkü Durum                                                                                                                                      |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Parçalı API'ler**         | Her banka, ödeme kuruluşu ve kargo firması farklı protokol kullanır: SOAP, XML, form-post, imzalı hash'ler, REST…                                  |
-| **Tutarsız veri modelleri** | Bir sağlayıcıda `amount` kuruş cinsinden, diğerinde `"10,50"` string olarak gelir. Adres, il/ilçe kodları, telefon formatları her yerde farklıdır. |
-| **Anlamsız hata kodları**   | `"Hata: 05"`, `"ErrMsg: Islem onaylanmadi"`… Hataların anlamını çözmek için PDF dökümanlarda kaybolursunuz.                                        |
-| **Vendor lock-in**          | Sağlayıcı değiştirmek, iş mantığının büyük kısmını yeniden yazmak demektir.                                                                        |
-| **Test zorluğu**            | Sandbox ortamları ya yoktur, ya yavaştır, ya da üretimden farklı davranır.                                                                         |
-| **Tekrarlanan emek**        | Aynı 3D Secure akışı, aynı hash hesaplaması, aynı XML parse işlemi binlerce şirkette yeniden yazılır.                                              |
-
-**Köprü bu emeği bir kez, doğru ve açık kaynak olarak yapar.**
+</div>
 
 ---
 
-## ✨ Yaklaşım: Önce Geliştirici Deneyimi (DX)
+Köprü, Türkiye'deki banka sanal POS'larını, ödeme kuruluşlarını (iyzico, PayTR vb.), kargo firmalarını (Yurtiçi, Aras vb.) ve e-Fatura / e-Arşiv entegratörlerini tip güvenli tek bir TypeScript API'si ve standart bir JSON/REST arayüzü altında toplayan açık kaynak bir ara katmandır (middleware). Stripe ile Plaid'in global ekosisteme getirdiği geliştirici deneyimini yerel ekosisteme taşımayı hedefliyoruz.
 
-### 1. Tek API, değiştirilebilir sağlayıcılar
+> [!WARNING]
+> Proje erken geliştirme aşamasında ve npm'de henüz yayımlanmış bir paket yok. Çekirdek paket (`@kopru/core`) ile mock sunucu çatısı (`@kopru/mock-server`) tamamlandı. Sıradaki adım ilk sağlayıcılar: iyzico ve Yurtiçi Kargo. Ayrıntılar [yol haritasında](./ROADMAP.md).
 
-İş mantığınız sağlayıcıdan bağımsızdır. iyzico'dan PayTR'ye geçmek bir konfigürasyon değişikliğidir, yeniden yazım değil.
+## Neden Köprü?
 
-### 2. Uçtan uca tip güvenliği
+Türkiye'de e-ticaret ya da SaaS ürünü geliştiren her ekip aynı zahmetli yoldan geçer:
 
-Tüm istek ve yanıtlar **Zod** şemaları ile tanımlanır. Derleme zamanında TypeScript, çalışma zamanında Zod sizi korur. Sağlayıcıdan beklenmedik bir yanıt gelirse sessizce bozulmaz, anlamlı bir hata alırsınız.
+| Sorun                       | Bugünkü durum                                                                                                                                        |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Parçalı API'ler**         | Her banka, ödeme kuruluşu ve kargo firması başka bir protokol kullanır: SOAP, XML, form-post, imzalı hash'ler, REST…                                 |
+| **Tutarsız veri modelleri** | Bir sağlayıcıda `amount` kuruş cinsinden gelir, ötekinde `"10,50"` diye string olarak. Adres, il/ilçe kodu ve telefon biçimi de her yerde farklıdır. |
+| **Anlamsız hata kodları**   | `"Hata: 05"`, `"ErrMsg: Islem onaylanmadi"`… Bir hatanın ne anlama geldiğini bulmak için PDF dokümanların arasında kaybolursunuz.                    |
+| **Vendor lock-in**          | Sağlayıcı değiştirmek, iş mantığının büyük kısmını yeniden yazmak demektir.                                                                          |
+| **Test zorluğu**            | Sandbox ortamı ya yoktur ya yavaştır ya da üretimden farklı davranır.                                                                                |
+| **Tekrarlanan emek**        | Aynı 3D Secure akışı, aynı hash hesabı, aynı XML ayrıştırma binlerce şirkette yeniden yazılır.                                                       |
 
-### 3. Anlaşılır, standart hatalar
+Köprü bu işi bir kez, doğru ve açık kaynak olarak yapar.
 
-`"Hata: 05"` yerine `KopruError` sınıfından türeyen, makine tarafından okunabilir bir kod (`PAYMENT_CARD_DECLINED`), Türkçe/İngilizce açıklama ve sağlayıcının ham yanıtını içeren hatalar.
+## Yaklaşım
 
-### 4. Gerçekçi Mock Server
+Köprü'de öncelik geliştirici deneyimidir (DX).
 
-Gerçek sağlayıcı hesabı açmadan, yerelde ve CI ortamında tüm akışları (3D Secure dahil) test edebilmeniz için sağlayıcı davranışlarını taklit eden bir mock sunucu.
+**Tek API, değiştirilebilir sağlayıcılar.** İş mantığınız sağlayıcıya bağlı kalmaz. iyzico'dan PayTR'ye geçmek için kodu yeniden yazmanız gerekmez, konfigürasyonu değiştirmeniz yeter.
 
-### 5. İki kullanım modu
+**Uçtan uca tip güvenliği.** Bütün istek ve yanıtlar Zod şemalarıyla tanımlanır. Derleme zamanında TypeScript, çalışma zamanında Zod sizi korur. Sağlayıcıdan beklenmedik bir yanıt gelirse kod sessizce bozulmaz, anlamlı bir hata alırsınız.
 
-- **Kütüphane olarak:** Node.js uygulamanıza `npm` paketi olarak ekleyin.
-- **Ara katman (middleware) olarak:** Dilden bağımsız standart bir JSON/REST servisi olarak ayağa kaldırın; PHP, Python, Go ya da herhangi bir istemciden kullanın.
+**Anlaşılır, standart hatalar.** Sağlayıcı `"Hata: 05"` döndürdüğünde size `KopruError` sınıfından türeyen bir hata gelir. İçinde makinenin okuyabileceği bir kod (`PAYMENT_CARD_DECLINED`), Türkçe ve İngilizce açıklama, bir de sağlayıcının ham yanıtı bulunur.
 
----
+**Gerçekçi mock sunucu.** `@kopru/mock-server` sağlayıcıların davranışını taklit eder. Gerçek bir sağlayıcı hesabı açmadan bütün akışları (3D Secure dâhil) yerelde ve CI'da test edebilirsiniz.
 
-## 🔭 Kapsam
+**İki kullanım modu.** Köprü'yü Node.js uygulamanıza npm paketi olarak ekleyebilirsiniz. Dilden bağımsız bir JSON/REST servisi olarak ayağa kaldırıp PHP, Python, Go ya da başka bir istemciden de kullanabilirsiniz (REST sunucusu Faz 2'de geliyor).
 
-| Alan             | Örnek Sağlayıcılar                                                                     |
-| ---------------- | -------------------------------------------------------------------------------------- |
-| 💳 **Ödeme**     | iyzico, PayTR, banka sanal POS'ları (Garanti BBVA, Akbank, İş Bankası, Yapı Kredi vb.) |
-| 📦 **Kargo**     | Yurtiçi Kargo, Aras Kargo, MNG, Sürat, PTT                                             |
-| 🧾 **e-Dönüşüm** | e-Fatura, e-Arşiv, e-İrsaliye entegratörleri                                           |
+## Kapsam
 
----
+| Alan          | Örnek sağlayıcılar                                                                     |
+| ------------- | -------------------------------------------------------------------------------------- |
+| **Ödeme**     | iyzico, PayTR, banka sanal POS'ları (Garanti BBVA, Akbank, İş Bankası, Yapı Kredi vb.) |
+| **Kargo**     | Yurtiçi Kargo, Aras Kargo, MNG, Sürat, PTT                                             |
+| **e-Dönüşüm** | e-Fatura, e-Arşiv, e-İrsaliye entegratörleri                                           |
 
-## 👀 Hedeflenen Kullanım (Taslak)
+## Paketler
 
-> Aşağıdaki örnek, hedeflenen API tasarımını göstermek içindir ve değişebilir.
+| Paket                                          | Durum                                 | Açıklama                                                                     |
+| ---------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
+| [`@kopru/core`](./packages/core)               | Tamamlandı, yayımlanmadı              | Ortak sözleşmeler, Zod şemaları, hata sınıfları, HTTP istemcisi, yardımcılar |
+| [`@kopru/mock-server`](./packages/mock-server) | Çatı hazır, sağlayıcı senaryoları yok | Deterministik senaryolarla çalışan sağlayıcı taklit sunucusu ve CLI          |
+| `@kopru/iyzico`                                | Planlandı (Faz 1)                     | iyzico ödeme sağlayıcısı                                                     |
+| `@kopru/yurtici`                               | Planlandı (Faz 1)                     | Yurtiçi Kargo sağlayıcısı                                                    |
+| `@kopru/server`                                | Planlandı (Faz 2)                     | Standart JSON/REST ara katmanı                                               |
+
+## Hedeflenen kullanım
+
+> [!NOTE]
+> Örnek, hedeflenen API tasarımını gösteriyor ve değişebilir.
 
 ```ts
 import { createPaymentClient } from '@kopru/core';
@@ -75,7 +83,7 @@ const payments = createPaymentClient({
 });
 
 const result = await payments.charge({
-  amount: { value: 15000, currency: 'TRY' }, // 150,00 TL — tutarlar her zaman kuruş cinsinden
+  amount: { value: 15000, currency: 'TRY' }, // 150,00 TL; tutarlar her zaman kuruş cinsinden
   card: { number: '5528790000000008', expiry: '12/30', cvc: '123', holderName: 'Ada Lovelace' },
   buyer: { id: 'u_1', email: 'ada@example.com', identityNumber: '11111111111' },
   installments: 1,
@@ -88,28 +96,45 @@ if (result.ok) {
 }
 ```
 
+## Geliştirme
+
+Node.js `22.18+` ya da `24.11+` ve pnpm `10` gerekir. pnpm sürümü `package.json` içinde sabitlendiği için `corepack enable` yeterlidir.
+
+```bash
+git clone https://github.com/DevVettel/kopru.git
+cd kopru
+corepack enable
+pnpm install
+pnpm test
+```
+
+Bütün komutlar ve PR süreci [katkı rehberinde](./CONTRIBUTING.md) anlatılıyor.
+
+## Dokümanlar
+
+| Doküman                                          | İçerik                                                    |
+| ------------------------------------------------ | --------------------------------------------------------- |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)             | Teknik mimari, monorepo yapısı, sağlayıcı eklenti sistemi |
+| [ROADMAP.md](./ROADMAP.md)                       | MVP ve sonraki fazlar                                     |
+| [docs/plans/PHASE-1.md](./docs/plans/PHASE-1.md) | Faz 1'in görev bazlı uygulama planı                       |
+| [docs/adr](./docs/adr/)                          | Mimari karar kayıtları (ADR)                              |
+| [docs/GLOSSARY.md](./docs/GLOSSARY.md)           | Türkçe alan terimlerinin koddaki İngilizce karşılıkları   |
+| [CLAUDE.md](./CLAUDE.md)                         | Kod geliştirme kuralları ve standartlar                   |
+
+## Katkı
+
+Köprü toplulukla büyüyecek bir proje. Özellikle şu konularda yardıma ihtiyacımız var:
+
+- Sağlayıcı dokümanlarına ve sandbox hesaplarına erişimi olan geliştiriciler
+- Sanal POS ve 3D Secure akışlarında deneyimli geliştiriciler
+- e-Dönüşüm mevzuatına hâkim katkıcılar
+
+Başlamadan önce [katkı rehberini](./CONTRIBUTING.md) ve [davranış kurallarını](./CODE_OF_CONDUCT.md) okuyun. Bir güvenlik açığı bulduysanız lütfen issue açmayın, [güvenlik politikasındaki](./SECURITY.md) adımları izleyin.
+
+## Lisans
+
+[MIT](./LICENSE)
+
 ---
 
-## 📚 Dökümanlar
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — Teknik mimari, monorepo yapısı, provider eklenti sistemi
-- [ROADMAP.md](./ROADMAP.md) — MVP ve sonraki fazlar
-- [CLAUDE.md](./CLAUDE.md) — Kod geliştirme kuralları ve standartlar
-
----
-
-## 🤝 Katkı
-
-Köprü topluluk ile büyüyecek bir projedir. Özellikle şu konularda katkıya ihtiyacımız var:
-
-- Sağlayıcı dökümanlarına ve sandbox hesaplarına erişimi olan geliştiriciler
-- Sanal POS / 3D Secure akışlarında deneyimli geliştiriciler
-- e-Dönüşüm mevzuatına hakim katkıcılar
-
-Katkı rehberi, ilk kod sürümüyle birlikte yayımlanacaktır.
-
-## 📄 Lisans
-
-MIT (planlanan)
-
-> Köprü; adı geçen banka, ödeme kuruluşu veya kargo firmalarının hiçbiriyle resmi bir bağlantıya sahip değildir. Tüm marka adları sahiplerine aittir.
+<sub>Köprü'nün adı geçen banka, ödeme kuruluşu ve kargo firmalarının hiçbiriyle resmî bir bağı yoktur. Bütün marka adları sahiplerine aittir.</sub>

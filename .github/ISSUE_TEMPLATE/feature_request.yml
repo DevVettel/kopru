@@ -1,0 +1,29 @@
+name: Özellik önerisi
+description: Yeni bir özellik ya da iyileştirme önerin.
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Çözmek istediğiniz sorun
+      description: Hangi ihtiyaç karşılanmıyor? Bugün bunu nasıl çözüyorsunuz?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Önerdiğiniz çözüm
+      description: API nasıl görünmeli? Mümkünse örnek kod ekleyin.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Değerlendirdiğiniz alternatifler
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Kontrol
+      options:
+        - label: '[Yol haritasına](https://github.com/DevVettel/kopru/blob/main/ROADMAP.md) baktım, bu özellik orada yok ya da farklı ele alınmış.'
+          required: true

@@ -1,0 +1,43 @@
+name: Sağlayıcı talebi
+description: Köprü'ye eklenmesini istediğiniz bir ödeme, kargo ya da e-Dönüşüm sağlayıcısını önerin.
+labels: ['provider']
+body:
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Alan
+      options:
+        - Ödeme (ödeme kuruluşu)
+        - Ödeme (banka sanal POS)
+        - Kargo
+        - e-Dönüşüm
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: Sağlayıcı
+      placeholder: 'örn. PayTR, Aras Kargo'
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: API dokümanı
+      description: Herkese açık bir doküman varsa bağlantısı.
+  - type: dropdown
+    id: protocol
+    attributes:
+      label: Protokol
+      options:
+        - REST / JSON
+        - SOAP / XML
+        - Form-post
+        - Bilmiyorum
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Katkı
+      options:
+        - label: Bu sağlayıcının sandbox ortamına erişimim var.
+        - label: Entegrasyonu yazmaya yardım edebilirim.

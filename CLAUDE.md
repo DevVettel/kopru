@@ -35,7 +35,7 @@ Köprü; Türkiye'deki ödeme kuruluşlarını, banka sanal POS'larını, kargo 
 | Sınıf, arayüz, tip, değişken, fonksiyon, dosya ve klasör isimleri | **İngilizce** |
 | Commit mesajları                                                  | **İngilizce** |
 | Hata kodları ve `KopruError.message`                              | **İngilizce** |
-| README dosyaları ve kullanıcı dökümantasyonu                      | **Türkçe**    |
+| README dosyaları ve kullanıcı dokümantasyonu                      | **Türkçe**    |
 | Kod içi açıklama yorumları ve JSDoc                               | **Türkçe**    |
 | `KopruError.userMessage` (son kullanıcıya gösterilebilir mesaj)   | **Türkçe**    |
 

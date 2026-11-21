@@ -1,8 +1,9 @@
 # @kopru/core
 
-Köprü'nün çekirdek paketi. Tüm sağlayıcı paketlerinin (`@kopru/iyzico`, `@kopru/yurtici` vb.) dayandığı ortak sözleşmeleri, Zod şemalarını, standart hata sınıflarını ve yardımcıları içerir.
+Köprü'nün çekirdek paketi. Bütün sağlayıcı paketleri (`@kopru/iyzico`, `@kopru/yurtici` vb.) buradaki ortak sözleşmelere, Zod şemalarına, standart hata sınıflarına ve yardımcılara dayanır.
 
-> ⚠️ Paket henüz geliştirme aşamasındadır ve npm'de yayımlanmamıştır. Ayrıntılar için [ARCHITECTURE.md](../../ARCHITECTURE.md) ve [Faz 1 planı](../../docs/plans/PHASE-1.md).
+> [!WARNING]
+> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Ayrıntılar için [ARCHITECTURE.md](../../ARCHITECTURE.md) ve [Faz 1 planı](../../docs/plans/PHASE-1.md).
 
 ## İçerik
 

@@ -7,7 +7,7 @@ export const ADMIN_PATH_PREFIX = '/__kopru';
 
 /**
  * Bir eklentinin sunduğu deterministik senaryonun tanımı. Yalnızca
- * dökümantasyon ve keşif (`GET /__kopru/scenarios`) amaçlıdır.
+ * dokümantasyon ve keşif (`GET /__kopru/scenarios`) amaçlıdır.
  */
 export const ScenarioDescriptorSchema = z.object({
   /** Senaryo kimliği (örn. `charge-success`). */

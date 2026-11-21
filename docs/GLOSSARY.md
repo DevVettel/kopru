@@ -1,4 +1,4 @@
-# Köprü — Terimler Sözlüğü
+# Terimler Sözlüğü
 
 Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karşılandığını tanımlar. Amaç, aynı kavramın farklı paketlerde farklı isimlerle yazılmasını engellemektir. Yeni bir alan kavramı kodlanmadan önce buraya eklenir; buradaki isimler bağlayıcıdır.
 
@@ -6,7 +6,7 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 
 ---
 
-## 💳 Ödeme
+## Ödeme
 
 | Türkçe Terim                     | Kod Karşılığı                  | Açıklama                                                                    |
 | -------------------------------- | ------------------------------ | --------------------------------------------------------------------------- |
@@ -40,7 +40,7 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | 3D yönlendirmesi                 | `ThreeDSAction`                | `html` (sağlayıcı sayfası) veya `redirect` (URL + form alanları).           |
 | Yetenek                          | `capability`                   | Sağlayıcının desteklediği işlem; örn. `refund.partial`.                     |
 
-## 📦 Kargo
+## Kargo
 
 | Türkçe Terim                         | Kod Karşılığı                          | Açıklama                                                        |
 | ------------------------------------ | -------------------------------------- | --------------------------------------------------------------- |
@@ -80,7 +80,7 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | `cancelled`        | İptal edildi                                       |
 | `unknown`          | Sağlayıcı durumu eşlenemedi (ham değer korunur)    |
 
-## 🧾 e-Dönüşüm (Faz 4)
+## e-Dönüşüm (Faz 4)
 
 | Türkçe Terim                       | Kod Karşılığı                              | Açıklama                                             |
 | ---------------------------------- | ------------------------------------------ | ---------------------------------------------------- |
@@ -98,7 +98,7 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | KDV                                | `vat`                                      |                                                      |
 | Tevkifat                           | `withholding`                              |                                                      |
 
-## 🪪 Kimlik ve Adres
+## Kimlik ve Adres
 
 | Türkçe Terim    | Kod Karşılığı                         | Açıklama                                    |
 | --------------- | ------------------------------------- | ------------------------------------------- |
@@ -112,7 +112,7 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 | Posta kodu      | `postalCode`                          |                                             |
 | Telefon         | `phone`                               | E.164 formatında (`+905xxxxxxxxx`).         |
 
-## 🧪 Test Altyapısı (Mock Server)
+## Test Altyapısı (Mock Server)
 
 | Türkçe Terim       | Kod Karşılığı                     | Açıklama                                                                        |
 | ------------------ | --------------------------------- | ------------------------------------------------------------------------------- |

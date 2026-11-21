@@ -2,11 +2,23 @@
   "name": "@kopru/mock-server",
   "version": "0.0.0",
   "description": "Köprü sağlayıcı taklit sunucusu: deterministik senaryolarla entegrasyon testleri için Hono tabanlı mock server.",
+  "keywords": [
+    "kopru",
+    "mock-server",
+    "testing",
+    "payment",
+    "cargo",
+    "hono"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DevVettel/kopru.git",
     "directory": "packages/mock-server"
+  },
+  "homepage": "https://github.com/DevVettel/kopru/tree/main/packages/mock-server#readme",
+  "bugs": {
+    "url": "https://github.com/DevVettel/kopru/issues"
   },
   "type": "module",
   "sideEffects": false,

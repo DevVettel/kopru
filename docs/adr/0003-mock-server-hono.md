@@ -1,4 +1,4 @@
-# 0003 — Mock server için Hono
+# 0003: Mock server için Hono
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-11-16

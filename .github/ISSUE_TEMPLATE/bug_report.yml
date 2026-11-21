@@ -1,0 +1,46 @@
+name: Hata bildirimi
+description: Beklendiği gibi çalışmayan bir şey bildirin.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Bildirime gerçek kart numarası, API anahtarı, TCKN ya da başka bir kişisel veri eklemeyin. Gerekirse değerleri `[REDACTED]` ile değiştirin.
+  - type: dropdown
+    id: package
+    attributes:
+      label: Paket
+      options:
+        - '@kopru/core'
+        - '@kopru/mock-server'
+        - Diğer / emin değilim
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Ne oldu?
+      description: Hatayı kısaca anlatın. Ne bekliyordunuz, ne oldu?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Yeniden üretme adımları
+      description: Hatayı yeniden üreten en küçük kod parçası ya da adımlar.
+      render: ts
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Hata çıktısı
+      description: Varsa `KopruError` kodu (`code`), mesajı ve ilgili log satırları.
+      render: text
+  - type: input
+    id: environment
+    attributes:
+      label: Ortam
+      placeholder: 'Node.js 22.18, pnpm 10.33, macOS 15'
+    validations:
+      required: true

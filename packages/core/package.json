@@ -2,11 +2,26 @@
   "name": "@kopru/core",
   "version": "0.0.0",
   "description": "Köprü çekirdek paketi: ortak sözleşmeler, şemalar, hatalar ve yardımcılar.",
+  "keywords": [
+    "kopru",
+    "turkey",
+    "payment",
+    "cargo",
+    "e-invoice",
+    "iyzico",
+    "virtual-pos",
+    "zod",
+    "typescript"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DevVettel/kopru.git",
     "directory": "packages/core"
+  },
+  "homepage": "https://github.com/DevVettel/kopru/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/DevVettel/kopru/issues"
   },
   "type": "module",
   "sideEffects": false,

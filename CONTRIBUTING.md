@@ -1,13 +1,16 @@
-# Köprü'ye Katkı Rehberi
+# Katkı Rehberi
 
-Köprü'ye katkıda bulunmak istediğiniz için teşekkürler! Bu rehber, geliştirme ortamını kurmanız ve ilk katkınızı göndermeniz için gereken her şeyi içerir.
+Köprü'ye katkı vermek istediğiniz için teşekkürler. Bu rehber, geliştirme ortamını kurup ilk katkınızı göndermeniz için gerekenleri anlatıyor.
 
-> Bu bir taslaktır; Faz 1 sonunda (M6.4) genişletilecektir.
+> [!NOTE]
+> Rehber şimdilik taslak. Faz 1'in sonunda (M6.4) genişletilecek.
+
+Projeye katılan herkesin [davranış kurallarına](./CODE_OF_CONDUCT.md) uyması beklenir. Güvenlik açıklarını issue olarak değil, [güvenlik politikasında](./SECURITY.md) anlatıldığı gibi bildirin.
 
 ## Gereksinimler
 
-- **Node.js** `22.18+` veya `24.11+` (önerilen sürüm `.nvmrc` dosyasındadır)
-- **pnpm** `10` (sürüm `package.json` → `packageManager` alanında sabittir; `corepack enable` ile otomatik kullanılır)
+- **Node.js** `22.18+` ya da `24.11+`. Önerilen sürüm `.nvmrc` dosyasında.
+- **pnpm** `10`. Sürüm `package.json` içindeki `packageManager` alanında sabit, `corepack enable` ile kendiliğinden kullanılır.
 
 ## Kurulum
 
@@ -18,7 +21,7 @@ corepack enable
 pnpm install
 ```
 
-## Sık Kullanılan Komutlar
+## Sık kullanılan komutlar
 
 | Komut                | Açıklama                                   |
 | -------------------- | ------------------------------------------ |
@@ -30,31 +33,33 @@ pnpm install
 | `pnpm format`        | Prettier ile biçimlendirir                 |
 | `pnpm changeset`     | Sürüm notu (changeset) ekler               |
 
-Tek bir paket üzerinde çalışmak için: `pnpm --filter @kopru/core test`
+Tek bir paket üzerinde çalışırken filtre kullanabilirsiniz: `pnpm --filter @kopru/core test`
 
 ## Kurallar
 
-Kod yazmadan önce mutlaka okuyun:
+Kod yazmadan önce şu üç dosyayı okuyun:
 
-- [CLAUDE.md](./CLAUDE.md) — Kodlama kuralları (TypeScript strict, Zod, dil kuralları, `@kopru/core` tek doğruluk kaynağı)
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — Mimari ve paket sınırları
-- [docs/GLOSSARY.md](./docs/GLOSSARY.md) — Türkçe terimlerin kod karşılıkları
+| Dosya                                  | İçerik                                                                                              |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| [CLAUDE.md](./CLAUDE.md)               | Kodlama kuralları: TypeScript strict, Zod, dil kuralları, tek doğruluk kaynağı olarak `@kopru/core` |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)   | Mimari ve paket sınırları                                                                           |
+| [docs/GLOSSARY.md](./docs/GLOSSARY.md) | Türkçe terimlerin koddaki karşılıkları                                                              |
 
-Özetle:
+En sık takılınan noktalar:
 
-- Kod, isimlendirme ve commit mesajları **İngilizce**; README ve JSDoc yorumları **Türkçe**.
-- Commit mesajları [Conventional Commits](https://www.conventionalcommits.org/) formatında: `feat(core): add Money schema`
-- `any`, `@ts-ignore` ve varsayılan export (`export default`) kullanılmaz; lint bunları engeller.
-- Sağlayıcı paketleri yalnızca `@kopru/core` paketini import edebilir; lint bunu da engeller.
+- Kod, isimlendirme ve commit mesajları **İngilizce**, README ve JSDoc yorumları **Türkçe** yazılır.
+- Commit mesajları [Conventional Commits](https://www.conventionalcommits.org/tr/v1.0.0/) biçimindedir: `feat(core): add Money schema`
+- `any`, `@ts-ignore` ve varsayılan export (`export default`) kullanılmaz. Lint bunları engeller.
+- Sağlayıcı paketleri yalnızca `@kopru/core` paketini import edebilir. Bunu da lint denetler.
 
-## Pull Request Süreci
+## Pull request süreci
 
 1. `main` dalından yeni bir dal açın.
 2. Değişikliğinizi testleriyle birlikte yapın.
-3. Yayımlanan bir paketi etkiliyorsa `pnpm changeset` ile sürüm notu ekleyin.
-4. `pnpm lint && pnpm typecheck && pnpm test && pnpm build` komutlarının geçtiğinden emin olun.
-5. PR açın; CI'ın yeşil olması gerekir.
+3. Değişiklik yayımlanan bir paketi etkiliyorsa `pnpm changeset` ile sürüm notu ekleyin.
+4. `pnpm lint && pnpm typecheck && pnpm test && pnpm build` komutunun hatasız geçtiğinden emin olun.
+5. PR'ı açıp şablondaki kontrol listesini doldurun. Birleştirme için CI'ın yeşil olması gerekir.
 
-## Mimari Kararlar
+## Mimari kararlar
 
-Mimariyi etkileyen bir değişiklik önerecekseniz, önce [docs/adr](./docs/adr/) altında bir ADR taslağı ile tartışma başlatın.
+Mimariyi etkileyen bir değişiklik önerecekseniz önce [docs/adr](./docs/adr/) altına bir ADR taslağı koyup tartışmayı orada başlatın.

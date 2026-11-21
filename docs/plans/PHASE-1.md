@@ -1,8 +1,8 @@
-# Faz 1 (MVP) — Uygulama Planı
+# Faz 1 (MVP): Uygulama Planı
 
-Bu döküman, [ROADMAP.md](../../ROADMAP.md) içindeki Faz 1 hedeflerini sıralı, bağımlılıkları belli ve tek tek doğrulanabilir görevlere böler. Her görev tek bir PR (veya küçük bir PR grubu) olacak büyüklüktedir.
+Bu doküman, [ROADMAP.md](../../ROADMAP.md) içindeki Faz 1 hedeflerini sıralı, bağımlılıkları belli ve tek tek doğrulanabilir görevlere böler. Her görev tek bir PR (veya küçük bir PR grubu) olacak büyüklüktedir.
 
-- **Kapsam:** Altyapı, `@kopru/core`, `@kopru/iyzico`, `@kopru/yurtici`, `@kopru/mock-server`, örnek uygulama ve dökümantasyon.
+- **Kapsam:** Altyapı, `@kopru/core`, `@kopru/iyzico`, `@kopru/yurtici`, `@kopru/mock-server`, örnek uygulama ve dokümantasyon.
 - **Kapsam dışı:** `@kopru/server` (REST), banka sanal POS'ları, e-Dönüşüm, taksit sorgulama, kısmi iade, ön provizyon.
 - **Referanslar:** [ARCHITECTURE.md](../../ARCHITECTURE.md), [CLAUDE.md](../../CLAUDE.md), [GLOSSARY.md](../GLOSSARY.md)
 
@@ -34,14 +34,14 @@ M0 Altyapı
            ├─▶ M3 Mock server çatısı
            │    ├─▶ M4 iyzico  (mock senaryolarıyla birlikte)
            │    └─▶ M5 Yurtiçi (mock senaryolarıyla birlikte)
-           └────────────┴─▶ M6 Örnek uygulama + dökümantasyon + 0.1.0 yayını
+           └────────────┴─▶ M6 Örnek uygulama + dokümantasyon + 0.1.0 yayını
 ```
 
 M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M0 — Altyapı ✅
+## M0: Altyapı ✅
 
 **Amaç:** Boş ama tam çalışan bir monorepo: `pnpm install && pnpm build && pnpm test` yeşil.
 
@@ -62,7 +62,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M1 — Core Temelleri ✅
+## M1: Core Temelleri ✅
 
 **Amaç:** Tüm paketlerin kullanacağı değer tipleri, sonuç tipi ve hata sistemi.
 
@@ -84,7 +84,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M2 — Core Sağlayıcı Katmanı ✅
+## M2: Core Sağlayıcı Katmanı ✅
 
 **Amaç:** Sağlayıcıların uyacağı sözleşmeler ve kullanacağı ortak altyapı.
 
@@ -100,7 +100,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M2.8  | `http/redact.ts`: kart no, CVC, apiKey, secret, TCKN maskeleme                                                                                                                                         | Log kancalarına giden her veri buradan geçer                                       |
 | M2.9  | `utils/crypto.ts`: HMAC-SHA256/SHA1/SHA512, Base64 yardımcıları                                                                                                                                        |                                                                                    |
 | M2.10 | `utils/xml.ts`: XML ↔ JSON, SOAP zarfı oluşturma/çözme                                                                                                                                                 | fast-xml-parser üzerine ince katman                                                |
-| M2.11 | `client/`: `createPaymentClient`, `createCargoClient` — girdi doğrulama → capability → provider çağrısı → çıktı doğrulama                                                                              | ARCHITECTURE.md §4.3 akışı                                                         |
+| M2.11 | `client/`: `createPaymentClient`, `createCargoClient`: girdi doğrulama → capability → provider çağrısı → çıktı doğrulama                                                                               | ARCHITECTURE.md §4.3 akışı                                                         |
 | M2.12 | `testing/` alt export'u (`@kopru/core/testing`): sağlayıcılar için **contract test paketi**                                                                                                            | `runPaymentProviderContract(provider, fixtures)` / `runCargoProviderContract(...)` |
 
 **Bitti sayılır:** Sahte (in-memory) bir `PaymentProvider` ve `CargoProvider` contract test paketini geçer; client akışı uçtan uca test edilmiştir.
@@ -114,7 +114,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M3 — Mock Server Çatısı ✅
+## M3: Mock Server Çatısı ✅
 
 **Amaç:** Sağlayıcı senaryolarının eklenebileceği, testlerden programatik başlatılabilen sunucu.
 
@@ -138,15 +138,15 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M4 — `@kopru/iyzico` ⬜
+## M4: `@kopru/iyzico` ⬜
 
 **Amaç:** iyzico ile non-3DS ödeme, 3DS ödeme ve tam iade.
 
 | ID   | Görev                                                                                                                                                            | Notlar                                            |
 | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| M4.0 | iyzico API dökümanının incelenmesi; kullanılacak endpoint'lerin, imzalama yönteminin ve hata kodlarının `packages/payment-iyzico/NOTES.md` dosyasına çıkarılması | Uygulamadan önce güncel dökümandan doğrulanır     |
+| M4.0 | iyzico API dokümanının incelenmesi; kullanılacak endpoint'lerin, imzalama yönteminin ve hata kodlarının `packages/payment-iyzico/NOTES.md` dosyasına çıkarılması | Uygulamadan önce güncel dokümandan doğrulanır     |
 | M4.1 | `config.ts`: `apiKey`, `secretKey`, `baseUrl` / `sandbox` şeması                                                                                                 |                                                   |
-| M4.2 | `auth.ts`: istek imzalama ve `Authorization` başlığı                                                                                                             | Resmi dökümandaki test vektörleri ile birim testi |
+| M4.2 | `auth.ts`: istek imzalama ve `Authorization` başlığı                                                                                                             | Resmi dokümandaki test vektörleri ile birim testi |
 | M4.3 | `schemas/`: ham istek/yanıt Zod şemaları (yalnızca kullanılan alanlar katı)                                                                                      |                                                   |
 | M4.4 | `mappers/`: `ChargeRequest` → iyzico isteği; iyzico yanıtı → `ChargeResult`                                                                                      | Tutar dönüşümü yalnızca burada                    |
 | M4.5 | `errors.ts`: iyzico hata kodu → Köprü hata kodu tablosu                                                                                                          | Eşlenmeyen → `PROVIDER_UNEXPECTED_RESPONSE`       |
@@ -159,13 +159,13 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M5 — `@kopru/yurtici` ⬜
+## M5: `@kopru/yurtici` ⬜
 
 **Amaç:** Yurtiçi Kargo ile gönderi oluşturma, iptal ve takip.
 
 | ID    | Görev                                                                                                                                                                    | Notlar                                                |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| M5.0  | Yurtiçi Kargo web servis dökümanının incelenmesi; operasyonların, alanların, durum kodlarının ve hata kodlarının `packages/cargo-yurtici/NOTES.md` dosyasına çıkarılması | Uygulamadan önce güncel dökümandan doğrulanır         |
+| M5.0  | Yurtiçi Kargo web servis dokümanının incelenmesi; operasyonların, alanların, durum kodlarının ve hata kodlarının `packages/cargo-yurtici/NOTES.md` dosyasına çıkarılması | Uygulamadan önce güncel dokümandan doğrulanır         |
 | M5.1  | `config.ts`: kullanıcı adı, şifre, dil, `baseUrl` / `sandbox` şeması                                                                                                     |                                                       |
 | M5.2  | `soap.ts`: operasyon bazlı SOAP zarfı oluşturma ve yanıt çözme (core `utils/xml` üzerine)                                                                                |                                                       |
 | M5.3  | `schemas/`: ham SOAP yanıtlarının (JSON'a çevrilmiş hali) Zod şemaları                                                                                                   |                                                       |
@@ -181,7 +181,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M6 — Örnek Uygulama, Dökümantasyon ve Yayın ⬜
+## M6: Örnek Uygulama, Dokümantasyon ve Yayın ⬜
 
 | ID   | Görev                                                                                                  | Notlar                                     |
 | ---- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
@@ -211,8 +211,8 @@ ROADMAP.md'deki kriterlerin ölçülebilir hali:
 
 | Risk                                                 | Etki                         | Önlem                                                                                                          |
 | ---------------------------------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Sağlayıcı dökümanlarının eksik/güncel olmaması       | Yanlış eşleme, gizli hatalar | M4.0 / M5.0 araştırma görevleri; ham yanıtların Zod ile doğrulanması; gerçek yanıt fixture'ları                |
+| Sağlayıcı dokümanlarının eksik/güncel olmaması       | Yanlış eşleme, gizli hatalar | M4.0 / M5.0 araştırma görevleri; ham yanıtların Zod ile doğrulanması; gerçek yanıt fixture'ları                |
 | Sandbox hesaplarına erişim olmaması                  | Gerçek davranış doğrulanamaz | Mock server birincil test ortamı; sandbox testleri opsiyonel ve ayrı CI işi                                    |
-| Core sözleşmesinin tek sağlayıcıya göre şekillenmesi | Faz 2'de kırıcı değişiklik   | Sözleşme tasarlanırken PayTR/Aras dökümanlarına da göz atılır; `0.x` sürümünde kırıcı değişikliğe izin verilir |
+| Core sözleşmesinin tek sağlayıcıya göre şekillenmesi | Faz 2'de kırıcı değişiklik   | Sözleşme tasarlanırken PayTR/Aras dokümanlarına da göz atılır; `0.x` sürümünde kırıcı değişikliğe izin verilir |
 | Yurtiçi SOAP karmaşıklığı                            | M5'te gecikme                | ADR-0004 ile ince, operasyon bazlı adaptör; tüm WSDL'i modellemeye çalışılmaz                                  |
-| Kapsam kayması                                       | MVP'nin uzaması              | Kapsam dışı maddeler bu dökümanın başında sabittir; yeni istekler Faz 2'ye yazılır                             |
+| Kapsam kayması                                       | MVP'nin uzaması              | Kapsam dışı maddeler bu dokümanın başında sabittir; yeni istekler Faz 2'ye yazılır                             |

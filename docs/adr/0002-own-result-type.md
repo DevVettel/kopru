@@ -1,4 +1,4 @@
-# 0002 — Kendi `Result` tipimiz
+# 0002: Kendi `Result` tipimiz
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-11-16
