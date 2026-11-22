@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/DevVettel/kopru/main/docs/assets/logo.svg" alt="Köprü logosu" width="120" align="right">
+
 # @kopru/mock-server
 
 Köprü'nün sağlayıcı taklit sunucusu. Sağlayıcıların HTTP API'lerini deterministik senaryolarla taklit eder. Böylece gerçek bir sağlayıcı hesabı açmadan bütün akışları (3D Secure dâhil) yerelde ve CI'da test edebilirsiniz. Sağlayıcı paketlerini mock'a yönlendirmek için yalnızca `baseUrl` değerini değiştirmek yeterli.

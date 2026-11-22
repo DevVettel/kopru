@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./docs/assets/logo.svg" alt="Köprü logosu" width="320">
+
 # Köprü
 
 **Türkiye'nin ödeme, kargo ve e-Dönüşüm altyapıları için tek bir TypeScript API'si**

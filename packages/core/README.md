@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/DevVettel/kopru/main/docs/assets/logo.svg" alt="Köprü logosu" width="120" align="right">
+
 # @kopru/core
 
 Köprü'nün çekirdek paketi. Bütün sağlayıcı paketleri (`@kopru/iyzico`, `@kopru/yurtici` vb.) buradaki ortak sözleşmelere, Zod şemalarına, standart hata sınıflarına ve yardımcılara dayanır.

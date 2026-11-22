@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/DevVettel/kopru/main/docs/assets/logo.svg" alt="Köprü logosu" width="120" align="right">
+
 # @kopru/iyzico
 
 Köprü'nün [iyzico](https://www.iyzico.com/) ödeme sağlayıcısı. iyzico API'sini `@kopru/core` ödeme sözleşmesinin arkasına yerleştirir: non-3DS tahsilat, 3D Secure ve tam iade tek bir standart API ile yapılır.
