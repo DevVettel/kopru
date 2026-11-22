@@ -9,18 +9,18 @@ Köprü'nün çekirdek paketi. Bütün sağlayıcı paketleri (`@kopru/iyzico`, 
 
 ## İçerik
 
-| Modül                 | Dışa aktarılanlar                                                                                                                                  |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `result`              | `Result<T, E>`, `ok`, `err`, `isOk`, `isErr`, `unwrap`, `unwrapOr`, `mapResult`                                                                    |
-| `errors`              | `KopruError` ve alt sınıfları, `ERROR_CATALOG`, `createKopruError`, `fromZodError`, `validate`                                                     |
-| `primitives`          | `MoneySchema` (+ `toDecimalString` / `fromDecimalString`), `TCKNSchema`, `VKNSchema`, `PhoneNumberSchema`, `AddressSchema`, `CITIES`, `IBANSchema` |
-| `domain/payment`      | `ChargeRequestSchema`, `ChargeResultSchema`, `ThreeDSInitRequestSchema`, `ThreeDSInitResultSchema`, `RefundRequestSchema`, `PaymentProvider`       |
-| `domain/cargo`        | `CreateShipmentRequestSchema`, `ShipmentSchema`, `ShipmentTrackingSchema`, `TrackingEventSchema`, `ShipmentStatusSchema`, `CargoProvider`          |
-| `provider`            | `definePaymentProvider`, `defineCargoProvider`, `supports`, `ProviderContext`                                                                      |
-| `http`                | `createHttpClient` (timeout, idempotent retry, maskeli log kancaları), `redact*` yardımcıları                                                      |
-| `utils`               | `hash`, `hmac`, `safeEqual`, `base64*`, `parseXml`, `buildXml`, `buildSoapEnvelope`, `parseSoapEnvelope`, `formatIstanbulDateTime`                 |
-| `client`              | `createPaymentClient`, `createCargoClient`                                                                                                         |
-| `@kopru/core/testing` | `runPaymentProviderContract`, `runCargoProviderContract`, `createRecordingHttpClient` (yalnızca ESM, Vitest gerektirir)                            |
+| Modül                 | Dışa aktarılanlar                                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `result`              | `Result<T, E>`, `ok`, `err`, `isOk`, `isErr`, `unwrap`, `unwrapOr`, `mapResult`                                                                                          |
+| `errors`              | `KopruError` ve alt sınıfları, `ERROR_CATALOG`, `createKopruError`, `fromZodError`, `validate`                                                                           |
+| `primitives`          | `MoneySchema` (+ `toDecimalString` / `fromDecimalString`), `TCKNSchema`, `VKNSchema`, `PhoneNumberSchema`, `AddressSchema`, `CITIES`, `IBANSchema`                       |
+| `domain/payment`      | `ChargeRequestSchema`, `ChargeResultSchema`, `ThreeDSInitRequestSchema`, `ThreeDSInitResultSchema`, `RefundRequestSchema`, `PaymentProvider`                             |
+| `domain/cargo`        | `CreateShipmentRequestSchema`, `ShipmentSchema`, `ShipmentTrackingSchema`, `TrackingEventSchema`, `ShipmentStatusSchema`, `CargoProvider`                                |
+| `provider`            | `definePaymentProvider`, `defineCargoProvider`, `supports`, `ProviderContext`                                                                                            |
+| `http`                | `createHttpClient` (timeout, idempotent retry, maskeli log kancaları), `redact*` yardımcıları                                                                            |
+| `utils`               | `hash`, `hmac`, `safeEqual`, `base64*`, `parseXml`, `buildXml`, `buildSoapEnvelope`, `parseSoapEnvelope`, `xmlList`, `formatIstanbulDateTime`, `istanbulLocalToDateTime` |
+| `client`              | `createPaymentClient`, `createCargoClient`                                                                                                                               |
+| `@kopru/core/testing` | `runPaymentProviderContract`, `runCargoProviderContract`, `createRecordingHttpClient` (yalnızca ESM, Vitest gerektirir)                                                  |
 
 ## Örnek
 

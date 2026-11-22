@@ -5,7 +5,7 @@
 Köprü'nün sağlayıcı taklit sunucusu. Sağlayıcıların HTTP API'lerini deterministik senaryolarla taklit eder. Böylece gerçek bir sağlayıcı hesabı açmadan bütün akışları (3D Secure dâhil) yerelde ve CI'da test edebilirsiniz. Sağlayıcı paketlerini mock'a yönlendirmek için yalnızca `baseUrl` değerini değiştirmek yeterli.
 
 > [!WARNING]
-> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Yerleşik eklentiler: örnek `echo` ve `iyzico`. Yurtiçi senaryoları M5'te eklenecek ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
+> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Yerleşik eklentiler: örnek `echo`, `iyzico` ve `yurtici` ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
 
 ## Testlerden Kullanım (Vitest `globalSetup`)
 
@@ -106,6 +106,24 @@ Kart numaraları iyzico'nun resmi sandbox test kartlarıyla aynıdır (zaman aş
 | `4000000000000002` | Köprü'ye özgü: yanıt 10 sn gecikir (zaman aşımı testleri)      |
 
 Hata kartları non-3DS tahsilatta hemen, 3DS akışında ise `/payment/3dsecure/auth` aşamasında hata döner. 3DS başlatma yanıtındaki `threeDSHtmlContent`, callback alanlarını (`status`, `paymentId`, `conversationData`, `conversationId`, `mdStatus`) `callbackUrl` adresine otomatik POST eden bir sayfadır. Hatalı imza `1000`, sepet toplamı uyuşmazlığı `5062`, çözülemeyen gövde `11`, bulunamayan ödeme `5087` döner.
+
+### `yurtici` (`/yurtici`)
+
+Yurtiçi Kargo `ShippingOrderDispatcherServices` SOAP servisinin taklidi: `POST /yurtici/KOPSWebServices/ShippingOrderDispatcherServices` adresinde `createShipment`, `cancelShipment` ve `queryShipment` operasyonları. Kimlik bilgileri gövdedeki `wsUserName` / `wsPassword` alanlarıyla doğrulanır ve `YURTICI_MOCK_USERNAME` / `YURTICI_MOCK_PASSWORD` sabitleriyle dışa aktarılır. Gönderiler sunucu ömrü boyunca bellekte tutulur.
+
+| Kargo anahtarı / tetikleyici           | Sonuç                                                           |
+| -------------------------------------- | --------------------------------------------------------------- |
+| Herhangi bir yeni anahtar              | Oluşturma başarılı (`NOP`); tekrar oluşturma kaydı yeniler      |
+| `KOPRU-DELIVERED`                      | Takip: `DLV`, takip no `700000000001`, 5 adımlı hareket geçmişi |
+| `KOPRU-IN-TRANSIT`                     | Takip: `IND`, son hareket transfer merkezi; iptal reddedilir    |
+| `KOPRU-OUT-FOR-DELIVERY`               | Takip: `IND`, son hareket `DG` (dağıtıma çıkarıldı)             |
+| `KOPRU-RETURNED`                       | Takip: başarısız teslimat denemesi + iade (`returnStatus=3`)    |
+| `KOPRU-EXISTING` veya hazır anahtarlar | Oluşturma `60020` (anahtar daha önce kullanılmış)               |
+| Adreste `KOPRU-INVALID-ADDRESS`        | Oluşturma `60019` (geçersiz alıcı adresi)                       |
+| `KOPRU-TIMEOUT`                        | Köprü'ye özgü: yanıt 10 sn gecikir (zaman aşımı testleri)       |
+| Oluşturulmamış anahtar                 | Takip ve iptal `82519` (bulunamadı)                             |
+
+Oluşturulan bir gönderinin ilk iptali `CNL` döner, ikinci iptal `82520` (zaten iptal) döner. Ayrıca eksik/uzun kargo anahtarı (`80859`/`82500`), eksik alıcı adı (`60018`) ve 10 haneli olmayan telefon (`82516`) gibi alan hataları taklit edilir. Hatalı kimlik bilgisi, çözülemeyen XML ve bilinmeyen operasyonlar HTTP 500 ile SOAP Fault döner. Hareket geçmişi yalnızca `addHistoricalData=true` gönderildiğinde döner; hareketler, sağlayıcının sıralama yaptığını sınamak için bilinçli olarak karışık sırayla verilir.
 
 ## Eklenti Yazmak
 

@@ -190,6 +190,7 @@ export {
 export {
   REDACTED,
   SENSITIVE_KEYS,
+  SENSITIVE_KEY_SUFFIXES,
   redact,
   redactHeaders,
   redactSensitiveNumbers,
@@ -216,12 +217,18 @@ export {
   buildXml,
   parseSoapEnvelope,
   parseXml,
+  xmlList,
   type SoapEnvelope,
   type SoapEnvelopeOptions,
   type SoapVersion,
 } from './utils/xml.js';
 
-export { DEFAULT_TIME_ZONE, DateTimeSchema, formatIstanbulDateTime } from './utils/date.js';
+export {
+  DEFAULT_TIME_ZONE,
+  DateTimeSchema,
+  formatIstanbulDateTime,
+  istanbulLocalToDateTime,
+} from './utils/date.js';
 
 export type { CallOptions, ClientOptions } from './client/run-operation.js';
 export {

@@ -34,3 +34,25 @@ export function formatIstanbulDateTime(date: Date): string {
   const offset = `${sign}${String(Math.floor(abs / 60)).padStart(2, '0')}:${String(abs % 60).padStart(2, '0')}`;
   return `${local}${offset}`;
 }
+
+const LOCAL_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
+
+/**
+ * `Europe/Istanbul` saat dilimindeki yerel tarih-saati (`2026-11-18T13:00:00`), farkı
+ * açıkça belirtilmiş ISO 8601 metnine çevirir (`2026-11-18T13:00:00+03:00`). Sağlayıcıların
+ * saat dilimi bilgisi olmadan döndüğü tarihler için kullanılır.
+ *
+ * @param local - `YYYY-MM-DDTHH:mm:ss` biçiminde yerel tarih-saat
+ * @returns ISO 8601 metni; tarih geçersizse (örn. `2026-02-30`) `undefined`
+ */
+export function istanbulLocalToDateTime(local: string): string | undefined {
+  if (!LOCAL_DATE_TIME.test(local)) return undefined;
+  const wallClockAsUtc = Date.parse(`${local}Z`);
+  if (Number.isNaN(wallClockAsUtc)) return undefined;
+  // Duvar saati UTC gibi yorumlanır, o andaki İstanbul farkı kadar geri kaydırılır.
+  const probe = formatIstanbulDateTime(new Date(wallClockAsUtc));
+  const probeOffsetMs = Date.parse(`${probe.slice(0, 19)}Z`) - wallClockAsUtc;
+  const result = formatIstanbulDateTime(new Date(wallClockAsUtc - probeOffsetMs));
+  // Takvimde olmayan tarihler (`Date.parse` bunları ileri taşır) ve gün içi sınır dışı değerler elenir.
+  return result.slice(0, 19) === local ? result : undefined;
+}

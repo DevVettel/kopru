@@ -111,7 +111,7 @@ describe('globalSetup ile başlatılan sunucu', () => {
     expect(await client.requests()).toHaveLength(2);
 
     const plugins = await client.scenarios();
-    expect(plugins.map((plugin) => plugin.name)).toEqual(['echo', 'iyzico']);
+    expect(plugins.map((plugin) => plugin.name)).toEqual(['echo', 'iyzico', 'yurtici']);
 
     await client.clearRequests();
     expect(await client.requests()).toEqual([]);

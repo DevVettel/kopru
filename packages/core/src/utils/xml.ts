@@ -1,6 +1,7 @@
 // Paketin tip tanımları isimli `Builder` export'u bildirse de çalışma zamanında yalnızca varsayılan export vardır.
 import XmlBuilder from 'fast-xml-builder';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
+import { z } from 'zod';
 import { ProviderError } from '../errors/kopru-error.js';
 import { err, ok, type Result } from '../result/result.js';
 
@@ -73,6 +74,28 @@ export function parseXml(xml: string): Result<Record<string, unknown>, ProviderE
  */
 export function buildXml(value: Record<string, unknown>): string {
   return builder.build(value);
+}
+
+/**
+ * XML'den çevrilmiş tekrar eden bir elemanın şeması. Ayrıştırıcı tek elemanı nesne,
+ * birden fazlasını dizi olarak üretir; boş eleman (`<list/>`) ise boş metin olur.
+ * Bu şema üç durumu da diziye çevirir; eleman hiç yoksa sonuç boş dizidir.
+ *
+ * @example
+ * const Schema = z.object({ items: xmlList(z.object({ id: z.string() })) });
+ * Schema.parse({ items: { id: '1' } }); // → { items: [{ id: '1' }] }
+ */
+export function xmlList<T extends z.ZodType>(item: T) {
+  // `.optional()`: eleman hiç yoksa nesne şeması anahtarı zorunlu saymaz; sonuç boş dizi olur.
+  return z
+    .unknown()
+    .optional()
+    .transform((value): unknown[] => {
+      if (value === undefined || value === null || value === '') return [];
+      // `Array.isArray` daraltması `any[]` üretir; öğeler `unknown` olarak kopyalanır.
+      return Array.isArray(value) ? Array.from<unknown>(value) : [value];
+    })
+    .pipe(z.array(item));
 }
 
 /** SOAP sürümü. */

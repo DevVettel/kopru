@@ -7,12 +7,15 @@ import {
   buildXml,
   formatIstanbulDateTime,
   hash,
+  istanbulLocalToDateTime,
   hmac,
   parseSoapEnvelope,
   parseXml,
   randomHex,
   safeEqual,
+  xmlList,
 } from '../src/index.js';
+import { z } from 'zod';
 
 describe('crypto', () => {
   it('bilinen test vektörleriyle hash ve HMAC üretir', () => {
@@ -54,6 +57,16 @@ describe('date', () => {
     );
   });
 
+  it('İstanbul yerel saatini farkı belirtilmiş ISO metnine çevirir', () => {
+    expect(istanbulLocalToDateTime('2026-11-18T13:00:00')).toBe('2026-11-18T13:00:00+03:00');
+    // 2016 öncesi yaz saati uygulaması: Temmuz +03:00, Ocak +02:00.
+    expect(istanbulLocalToDateTime('2011-07-11T08:23:04')).toBe('2011-07-11T08:23:04+03:00');
+    expect(istanbulLocalToDateTime('2012-01-15T08:00:00')).toBe('2012-01-15T08:00:00+02:00');
+    for (const invalid of ['2026-02-30T10:00:00', '2026-11-18T24:00:00', '20261118', '']) {
+      expect(istanbulLocalToDateTime(invalid), invalid).toBeUndefined();
+    }
+  });
+
   it('DateTimeSchema saat dilimi farkı zorunlu tutar', () => {
     expect(DateTimeSchema.safeParse('2026-11-18T13:00:00+03:00').success).toBe(true);
     expect(DateTimeSchema.safeParse('2026-11-18T10:00:00Z').success).toBe(true);
@@ -62,6 +75,15 @@ describe('date', () => {
 });
 
 describe('xml', () => {
+  it('xmlList tek elemanı, diziyi ve boş elemanı diziye çevirir', () => {
+    const Schema = z.object({ items: xmlList(z.object({ id: z.string() })) });
+    expect(Schema.parse({ items: { id: '1' } })).toEqual({ items: [{ id: '1' }] });
+    expect(Schema.parse({ items: [{ id: '1' }, { id: '2' }] }).items).toHaveLength(2);
+    expect(Schema.parse({ items: '' })).toEqual({ items: [] });
+    expect(Schema.parse({})).toEqual({ items: [] });
+    expect(Schema.safeParse({ items: { id: 1 } }).success).toBe(false);
+  });
+
   it('XML’i metin değerleriyle ve namespace’siz çözer', () => {
     const result = parseXml(
       '<ns:Root xmlns:ns="urn:x"><ns:Tracking id="7">0012345</ns:Tracking><Empty/></ns:Root>',

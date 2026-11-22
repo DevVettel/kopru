@@ -161,7 +161,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M5: `@kopru/yurtici` ⬜
+## M5: `@kopru/yurtici` ✅
 
 **Amaç:** Yurtiçi Kargo ile gönderi oluşturma, iptal ve takip.
 
@@ -180,6 +180,8 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M5.10 | Paket README'si (Türkçe)                                                                                                                                                 |                                                       |
 
 **Bitti sayılır:** Contract testleri ve tüm mock senaryoları geçer.
+
+**Durum (2026-11-22):** M5.0–M5.10 tamamlandı. Yurtiçi'nin web servis dokümanı herkese açık olmadığı ve test ortamı IP kısıtlamalı olduğu için M5.0 araştırması açık kaynak entegrasyonların kaynak kodundan yapıldı. SOAP namespace'i, `SOAPAction`, kimlik hatası biçimi ve takipte "bulunamadı" kodu varsayım olarak [`packages/cargo-yurtici/NOTES.md`](../../packages/cargo-yurtici/NOTES.md) içinde işaretlendi. Kararlar §6'da: arama yalnızca `referenceId` (kargo anahtarı) ile yapılır; hesabın ödeme tipi konfigürasyonda sabittir; tekrarlanan iptal başarı sayılır; kapıda ödeme Faz 2'ye bırakıldı. Core'a üç genel yardımcı eklendi: `xmlList`, `istanbulLocalToDateTime` ve `password`/`secret` sonekli anahtarların maskelenmesi. M5.8'deki "gerçek örneklerden SOAP yanıtları" maddesi, herkese açık örnek bulunamadığı için alan adları kaynak koddan alınarak karşılandı. Gerçek servise karşı duman testi kimlik bilgisi olmadığından yapılmadı.
 
 ---
 

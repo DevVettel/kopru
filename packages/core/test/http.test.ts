@@ -33,6 +33,22 @@ describe('redact', () => {
     expect(input.card.number).toBe(PAN);
   });
 
+  it('password/secret sonekli anahtarları her biçimde maskeler', () => {
+    expect(redact({ wsPassword: 'p', ws_password: 'p', clientSecret: 's', user: 'u' })).toEqual({
+      wsPassword: REDACTED,
+      ws_password: REDACTED,
+      clientSecret: REDACTED,
+      user: 'u',
+    });
+    expect(
+      redactText(
+        '<ship:x><wsUserName>U</wsUserName><wsPassword>p&lt;1</wsPassword></ship:x>?a=1&userPassword=z',
+      ),
+    ).toBe(
+      `<ship:x><wsUserName>U</wsUserName><wsPassword>${REDACTED}</wsPassword></ship:x>?a=1&userPassword=${REDACTED}`,
+    );
+  });
+
   it('ek anahtarları destekler', () => {
     expect(redact({ merchantPass: 'x' }, { extraKeys: ['merchant_pass'] })).toEqual({
       merchantPass: REDACTED,

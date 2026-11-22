@@ -33,6 +33,12 @@ export const SENSITIVE_KEYS: readonly string[] = [
   'tckn',
 ];
 
+/**
+ * Bu soneklerle biten anahtarlar da hassas sayılır (örn. `wsPassword`, `userPassword`,
+ * `clientSecret`). Sağlayıcıların alan adlarını tek tek listelemeye gerek kalmaz.
+ */
+export const SENSITIVE_KEY_SUFFIXES: readonly string[] = ['password', 'secret'];
+
 /** Maskeleme seçenekleri. */
 export interface RedactOptions {
   /** Varsayılan listeye eklenecek, sağlayıcıya özgü hassas anahtar adları. */
@@ -45,7 +51,10 @@ function normalizeKey(key: string): string {
 
 function createKeyMatcher(options: RedactOptions): (key: string) => boolean {
   const keys = new Set([...SENSITIVE_KEYS, ...(options.extraKeys ?? []).map(normalizeKey)]);
-  return (key) => keys.has(normalizeKey(key));
+  return (key) => {
+    const normalized = normalizeKey(key);
+    return keys.has(normalized) || SENSITIVE_KEY_SUFFIXES.some((s) => normalized.endsWith(s));
+  };
 }
 
 /**
@@ -104,9 +113,13 @@ export function redactText(text: string, options: RedactOptions = {}): string {
   }
 
   const keys = [...SENSITIVE_KEYS, ...(options.extraKeys ?? []).map(normalizeKey)];
+  // Sonek kalıpları: `wsPassword`, `ws_password` gibi adları da yakalar.
+  const names = [
+    ...keys.map(escapeRegExp),
+    ...SENSITIVE_KEY_SUFFIXES.map((suffix) => `[\\w.-]*${escapeRegExp(suffix)}`),
+  ];
   let result = text;
-  for (const key of keys) {
-    const name = escapeRegExp(key);
+  for (const name of names) {
     const xmlTag = new RegExp(`(<(?:[\\w.-]+:)?${name}(?:\\s[^>]*)?>)([^<]*)(</)`, 'gi');
     const formField = new RegExp(`((?:^|[?&])${name}=)([^&]*)`, 'gi');
     result = result.replace(xmlTag, `$1${REDACTED}$3`).replace(formField, `$1${REDACTED}`);

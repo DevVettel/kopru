@@ -49,24 +49,24 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 - [x] Hata kodu eşleme tablosu
 - [x] Contract test paketini geçme
 
-### 1.3 Kargo Sağlayıcısı: `@kopru/yurtici` ⬜
+### 1.3 Kargo Sağlayıcısı: `@kopru/yurtici` ✅
 
 > Seçim gerekçesi: Pazar payı yüksek; SOAP tabanlı API'si, mimarinin "eski" protokolleri de soyutlayabildiğini kanıtlamak için iyi bir test.
 
-- [ ] Konfigürasyon şeması
-- [ ] SOAP/XML istemci adaptörü
-- [ ] Gönderi oluşturma
-- [ ] Gönderi iptali
-- [ ] Kargo takibi (durum ve hareket geçmişi)
-- [ ] Sağlayıcı durumlarının standart `ShipmentStatus` değerlerine eşlenmesi
-- [ ] Hata kodu eşleme tablosu
-- [ ] Contract test paketini geçme
+- [x] Konfigürasyon şeması
+- [x] SOAP/XML istemci adaptörü
+- [x] Gönderi oluşturma
+- [x] Gönderi iptali
+- [x] Kargo takibi (durum ve hareket geçmişi)
+- [x] Sağlayıcı durumlarının standart `ShipmentStatus` değerlerine eşlenmesi
+- [x] Hata kodu eşleme tablosu
+- [x] Contract test paketini geçme
 
 ### 1.4 `@kopru/mock-server` 🟨
 
 - [x] Sağlayıcıdan bağımsız mock sunucu çatısı
 - [x] iyzico senaryoları: başarılı ödeme, kart reddi, yetersiz bakiye, 3DS akışı, iade, zaman aşımı
-- [ ] Yurtiçi senaryoları: gönderi oluşturma, geçersiz adres, takip hareketleri, bulunamayan gönderi
+- [x] Yurtiçi senaryoları: gönderi oluşturma, geçersiz adres, takip hareketleri, bulunamayan gönderi
 - [ ] Deterministik test verileri (test kartları, takip numaraları) dokümantasyonu
 - [x] Vitest entegrasyon testlerinde programatik olarak başlatılabilme
 - [x] CLI ile bağımsız çalıştırılabilme
