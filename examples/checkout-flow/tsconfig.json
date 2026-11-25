@@ -1,0 +1,9 @@
+{
+  "extends": "@kopru/tsconfig/base.json",
+  "compilerOptions": {
+    // Örnek derlenmez; Node.js tip silme (type stripping) ile doğrudan çalıştırılır.
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": ["src", "test", "*.config.ts"]
+}

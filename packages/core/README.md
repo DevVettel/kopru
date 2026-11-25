@@ -5,7 +5,15 @@
 Köprü'nün çekirdek paketi. Bütün sağlayıcı paketleri (`@kopru/iyzico`, `@kopru/yurtici` vb.) buradaki ortak sözleşmelere, Zod şemalarına, standart hata sınıflarına ve yardımcılara dayanır.
 
 > [!WARNING]
-> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Ayrıntılar için [ARCHITECTURE.md](../../ARCHITECTURE.md) ve [Faz 1 planı](../../docs/plans/PHASE-1.md).
+> Köprü `0.x` sürümlerinde. API, küçük (minor) sürümler arasında değişebilir. Mimari için [ARCHITECTURE.md](https://github.com/DevVettel/kopru/blob/main/ARCHITECTURE.md).
+
+## Kurulum
+
+```bash
+pnpm add @kopru/core
+```
+
+Node.js 22 ya da üzeri gerekir.
 
 ## İçerik
 

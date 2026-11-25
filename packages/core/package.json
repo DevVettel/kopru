@@ -1,6 +1,6 @@
 {
   "name": "@kopru/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Köprü çekirdek paketi: ortak sözleşmeler, şemalar, hatalar ve yardımcılar.",
   "keywords": [
     "kopru",

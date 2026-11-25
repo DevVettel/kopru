@@ -1,6 +1,6 @@
 {
   "name": "@kopru/iyzico",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Köprü iyzico ödeme sağlayıcısı: non-3DS tahsilat, 3D Secure ve tam iade.",
   "keywords": [
     "kopru",
@@ -54,7 +54,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@kopru/core": "workspace:*",
+    "@kopru/core": "workspace:^",
     "zod": "^4.6.7"
   },
   "devDependencies": {

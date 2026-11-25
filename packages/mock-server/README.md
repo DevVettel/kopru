@@ -5,7 +5,17 @@
 Köprü'nün sağlayıcı taklit sunucusu. Sağlayıcıların HTTP API'lerini deterministik senaryolarla taklit eder. Böylece gerçek bir sağlayıcı hesabı açmadan bütün akışları (3D Secure dâhil) yerelde ve CI'da test edebilirsiniz. Sağlayıcı paketlerini mock'a yönlendirmek için yalnızca `baseUrl` değerini değiştirmek yeterli.
 
 > [!WARNING]
-> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Yerleşik eklentiler: örnek `echo`, `iyzico` ve `yurtici` ([Faz 1 planı](../../docs/plans/PHASE-1.md)).
+> Köprü `0.x` sürümlerinde. API, küçük (minor) sürümler arasında değişebilir. Yerleşik eklentiler: örnek `echo`, `iyzico` ve `yurtici`.
+
+## Kurulum
+
+```bash
+pnpm add -D @kopru/mock-server
+```
+
+Node.js 22 ya da üzeri gerekir.
+
+Test kartları, hazır gönderiler ve Köprü hata kodlarıyla karşılıkları: [Mock server ile test rehberi](../../docs/guides/testing-with-mock-server.md).
 
 ## Testlerden Kullanım (Vitest `globalSetup`)
 
@@ -126,6 +136,8 @@ Yurtiçi Kargo `ShippingOrderDispatcherServices` SOAP servisinin taklidi: `POST 
 Oluşturulan bir gönderinin ilk iptali `CNL` döner, ikinci iptal `82520` (zaten iptal) döner. Ayrıca eksik/uzun kargo anahtarı (`80859`/`82500`), eksik alıcı adı (`60018`) ve 10 haneli olmayan telefon (`82516`) gibi alan hataları taklit edilir. Hatalı kimlik bilgisi, çözülemeyen XML ve bilinmeyen operasyonlar HTTP 500 ile SOAP Fault döner. Hareket geçmişi yalnızca `addHistoricalData=true` gönderildiğinde döner; hareketler, sağlayıcının sıralama yaptığını sınamak için bilinçli olarak karışık sırayla verilir.
 
 ## Eklenti Yazmak
+
+Sağlayıcı paketinin tamamı için: [Yeni sağlayıcı ekleme rehberi](../../docs/guides/adding-a-provider.md).
 
 Sağlayıcı senaryoları bu paketin `src/plugins/<sağlayıcı>/` dizininde yaşar. Sağlayıcı paketleri yalnızca `@kopru/core`'a bağımlı olabildiğinden mock eklentileri sağlayıcı paketinin içine konmaz; bu ayrım aynı zamanda mock'un sağlayıcı paketinin koduna değil, sağlayıcının **ham HTTP sözleşmesine** göre yazılmasını sağlar.
 

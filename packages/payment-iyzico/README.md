@@ -5,7 +5,15 @@
 Köprü'nün [iyzico](https://www.iyzico.com/) ödeme sağlayıcısı. iyzico API'sini `@kopru/core` ödeme sözleşmesinin arkasına yerleştirir: non-3DS tahsilat, 3D Secure ve tam iade tek bir standart API ile yapılır.
 
 > [!WARNING]
-> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Ayrıntılar için [Faz 1 planı](../../docs/plans/PHASE-1.md).
+> Köprü `0.x` sürümlerinde. API, küçük (minor) sürümler arasında değişebilir. iyzico sandbox'ına karşı henüz uçtan uca denenmedi; testler mock server'a karşı çalışır.
+
+## Kurulum
+
+```bash
+pnpm add @kopru/core @kopru/iyzico
+```
+
+Node.js 22 ya da üzeri gerekir.
 
 ## Yetenekler
 
@@ -17,7 +25,7 @@ Köprü'nün [iyzico](https://www.iyzico.com/) ödeme sağlayıcısı. iyzico AP
 | `installments`   | ✅     | iyzico'nun desteklediği taksit sayıları                      |
 | `refund.partial` | ❌     | Faz 2                                                        |
 
-## Kurulum ve Konfigürasyon
+## Konfigürasyon
 
 ```ts
 import { createPaymentClient } from '@kopru/core';
@@ -98,7 +106,7 @@ app.post('/3ds', async (req, res) => {
 });
 ```
 
-Callback verisi kullanıcının tarayıcısından geçtiği için yalnızca yönlendirme amaçlı kullanılır; ödeme, sunucudan iyzico'ya yapılan `/payment/3dsecure/auth` çağrısıyla kesinleşir. `mdStatus` `1` değilse bu çağrı yapılmadan `PAYMENT_THREEDS_FAILED` döner.
+Callback verisi kullanıcının tarayıcısından geçtiği için yalnızca yönlendirme amaçlı kullanılır; ödeme, sunucudan iyzico'ya yapılan `/payment/3dsecure/auth` çağrısıyla kesinleşir. `mdStatus` `1` değilse bu çağrı yapılmadan `PAYMENT_THREEDS_FAILED` döner. Sonuçtaki `orderId` callback'ten değil, iyzico'nun yanıtından alınır. Siparişi ödendi olarak işaretlemeden önce `orderId` ve `amount` değerlerini kendi kaydınızla karşılaştırın.
 
 ### Tam iade
 

@@ -1,0 +1,68 @@
+name: Release
+
+# Yayın yalnızca elle başlatılır. `dry-run` işaretliyken (varsayılan) npm'e hiçbir şey gönderilmez.
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Yalnızca dene, npm'e yayımlama
+        type: boolean
+        default: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: pnpm install --frozen-lockfile
+      - name: Check for pending changesets
+        run: |
+          if find .changeset -name '*.md' ! -name README.md | grep -q .; then
+            echo '::error::Pending changesets found. Run "pnpm version-packages" and merge the result first.'
+            exit 1
+          fi
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm example:checkout
+      - run: pnpm -r publish --dry-run --no-git-checks
+
+  publish:
+    name: Publish
+    needs: verify
+    if: ${{ !inputs.dry-run && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    # Onaylayıcı, depo ayarlarındaki `npm` ortamında tanımlanır.
+    environment: npm
+    permissions:
+      contents: write # git etiketleri
+      id-token: write # npm provenance
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      # Önbellek bilinçli olarak kullanılmaz: yayın işi başka işlerin yazdığı önbelleğe güvenmez.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm changeset publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
+      - run: git push origin --tags

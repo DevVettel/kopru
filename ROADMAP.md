@@ -62,21 +62,27 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 - [x] Hata kodu eşleme tablosu
 - [x] Contract test paketini geçme
 
-### 1.4 `@kopru/mock-server` 🟨
+### 1.4 `@kopru/mock-server` ✅
 
 - [x] Sağlayıcıdan bağımsız mock sunucu çatısı
 - [x] iyzico senaryoları: başarılı ödeme, kart reddi, yetersiz bakiye, 3DS akışı, iade, zaman aşımı
 - [x] Yurtiçi senaryoları: gönderi oluşturma, geçersiz adres, takip hareketleri, bulunamayan gönderi
-- [ ] Deterministik test verileri (test kartları, takip numaraları) dokümantasyonu
+- [x] Deterministik test verileri (test kartları, takip numaraları) [dokümantasyonu](./docs/guides/testing-with-mock-server.md)
 - [x] Vitest entegrasyon testlerinde programatik olarak başlatılabilme
 - [x] CLI ile bağımsız çalıştırılabilme
 
-### 1.5 Dokümantasyon ve Örnekler ⬜
+### 1.5 Dokümantasyon ve Örnekler ✅
 
-- [ ] Her paket için Türkçe README
-- [ ] `examples/` altında ödeme + kargo kullanan basit bir Node.js örneği
-- [ ] "Yeni sağlayıcı nasıl eklenir" rehberi
-- [ ] `CONTRIBUTING.md`
+- [x] Her paket için Türkçe README
+- [x] `examples/` altında ödeme + kargo kullanan basit bir Node.js örneği ([`checkout-flow`](./examples/checkout-flow))
+- [x] "Yeni sağlayıcı nasıl eklenir" [rehberi](./docs/guides/adding-a-provider.md)
+- [x] `CONTRIBUTING.md`
+
+### 1.6 Yayın 🟨
+
+- [x] Paketlerin `0.1.0` sürümüne yükseltilmesi ve `CHANGELOG.md` dosyaları
+- [x] Elle başlatılan npm yayın iş akışı (`release.yml`)
+- [ ] npm'de `@kopru` scope'unun alınması ve `0.1.0` yayını
 
 ### Faz 1 Tamamlanma Kriterleri
 
