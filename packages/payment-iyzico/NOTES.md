@@ -52,7 +52,7 @@ Authorization = "IYZWSv2 " + base64(authString)
 
 ### Tahsilat yanıtı (kullanılan alanlar)
 
-`status` (`success` | `failure`), `errorCode`, `errorMessage`, `errorGroup`, `systemTime` (epoch ms), `conversationId`, `paymentId`, `price`, `paidPrice`, `currency`, `installment`, `fraudStatus` (`1` onay, `0` inceleme, `-1` red), `binNumber`, `lastFourDigits`, `cardFamily`.
+`status` (`success` | `failure`), `errorCode`, `errorMessage`, `errorGroup`, `systemTime` (epoch ms), `conversationId`, `basketId`, `paymentId`, `price`, `paidPrice`, `currency`, `installment`, `fraudStatus` (`1` onay, `0` inceleme, `-1` red), `binNumber`, `lastFourDigits`, `cardFamily`.
 
 ### 3DS akışı
 
@@ -106,6 +106,6 @@ Doküman, hata kartlarını sayısal kodlarla ayrıca eşlemez; parantez içinde
 1. **Eksik zorunlu alıcı bilgisi:** iyzico `identityNumber` ve kayıt adresi ister; core `BuyerSchema`'da bunlar opsiyoneldir. Eksikse ağ isteği yapılmadan `VALIDATION_FAILED` döner. Yer tutucu (`11111111111` gibi) **gönderilmez.** Fatura adresi verilmezse alıcı adresi kullanılır (ve tersi).
 2. **Tam iade:** `/payment/detail` ile ödenen tutar (`paidPrice`) alınır, `/v2/payment/refund` çağrılır. Ödeme henüz gün sonundan geçmediği için `10223` dönerse `/payment/cancel` ile iptal edilir. Böylece kullanıcı tek bir `refund` çağrısıyla her durumda tam iade yapabilir.
 3. **3DS tamamlama v1:** v2 (`/payment/v2/3dsecure/auth`), callback'te bulunmayan `paidPrice`, `basketId` ve `currency` alanlarını ister; bu core `ThreeDSCallback` sözleşmesini değiştirmeyi gerektirir. Faz 1'de durumsuz v1 kullanılır; v2 Faz 2'de değerlendirilecektir.
-4. **Yanıt imzası doğrulaması yapılmaz:** iyzico, yanıtlardaki `signature` alanının hangi alanlardan ve hangi sırayla üretildiğini belgelememektedir. 3DS'te callback verisine güvenilmez; tahsilat sunucudan sunucuya yapılan `/payment/3dsecure/auth` çağrısının sonucuyla kesinleşir.
+4. **Yanıt imzası doğrulaması yapılmaz:** iyzico, yanıtlardaki `signature` alanının hangi alanlardan ve hangi sırayla üretildiğini belgelememektedir. 3DS'te callback verisine güvenilmez; tahsilat sunucudan sunucuya yapılan `/payment/3dsecure/auth` çağrısının sonucuyla kesinleşir. Aynı nedenle sonuçtaki `orderId`, callback'teki `conversationId`'den değil yanıttaki `basketId`'den alınır; `conversationId` yalnızca yanıtta `basketId` yoksa kullanılır.
 5. **Sepet:** `items` verilmezse sipariş tek kalemlik sepet olarak gönderilir. Kalem tipi (`PHYSICAL`/`VIRTUAL`) ve kategori konfigürasyondan gelir.
 6. **Tekrar deneme yok:** Tahsilat, iade ve iptal istekleri idempotent değildir ve yeniden denenmez; yalnızca `/payment/detail` yeniden denenebilir.

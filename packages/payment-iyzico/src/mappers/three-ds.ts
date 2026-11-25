@@ -19,8 +19,11 @@ export const IYZICO_MD_STATUS_SUCCESS = '1';
 /** Callback'ten çözümlenen ve tahsilatı tamamlamak için gereken bilgiler. */
 export interface ThreeDSCompletion {
   request: IyzicoThreeDSAuthRequest;
-  /** Mağazanın sipariş numarası (`conversationId` olarak gönderilmişti). */
-  orderId: string | undefined;
+  /**
+   * Callback'teki sipariş numarası (`conversationId`). Kullanıcının tarayıcısından geçtiği
+   * için güvenilmez; yalnızca sunucu yanıtında sipariş numarası yoksa kullanılır.
+   */
+  callbackOrderId: string | undefined;
 }
 
 /**
@@ -59,13 +62,13 @@ export function toThreeDSCompletion(
     );
   }
 
-  const orderId =
+  const callbackOrderId =
     conversationId === undefined || conversationId === '' ? undefined : conversationId;
   return ok({
-    orderId,
+    callbackOrderId,
     request: {
       locale: config.locale,
-      ...(orderId === undefined ? {} : { conversationId: orderId }),
+      ...(callbackOrderId === undefined ? {} : { conversationId: callbackOrderId }),
       paymentId,
       ...(conversationData === undefined || conversationData === '' ? {} : { conversationData }),
     },
