@@ -77,11 +77,21 @@ async function refundPayment(
   return toRefundResult(cancelled.value, paymentId, ctx.now());
 }
 
+/**
+ * Sipariş numarasını güven sırasına göre seçer. `basketId` 3DS başlatılırken sunucudan
+ * gönderilir ve sunucu yanıtında geri gelir. Callback'teki `conversationId` kullanıcının
+ * tarayıcısından geçtiği, yanıttaki `conversationId` ise onu yansıttığı için yalnızca
+ * `basketId` yoksa kullanılır.
+ */
+function resolveOrderId(...candidates: readonly (string | undefined)[]): string | undefined {
+  return candidates.find((candidate) => candidate !== undefined && candidate !== '');
+}
+
 function missingOrderId(paymentId: string): Result<ChargeResult, KopruError> {
   return err(
     new ProviderError({
       code: 'PROVIDER_UNEXPECTED_RESPONSE',
-      message: 'iyzico 3DS response does not contain the order id (conversationId)',
+      message: 'iyzico 3DS response does not contain the order id',
       provider: IYZICO_PROVIDER_ID,
       details: { paymentId },
     }),
@@ -139,9 +149,12 @@ export const iyzico = definePaymentProvider({
         operation: 'payment',
       });
       if (!response.ok) return dropEnvelope(response);
-      const orderId =
-        completion.value.orderId ?? response.value.conversationId ?? response.value.basketId;
-      if (orderId === undefined || orderId === '') return missingOrderId(response.value.paymentId);
+      const orderId = resolveOrderId(
+        response.value.basketId,
+        completion.value.callbackOrderId,
+        response.value.conversationId,
+      );
+      if (orderId === undefined) return missingOrderId(response.value.paymentId);
       return toChargeResult(response.value, orderId, ctx.now());
     },
 

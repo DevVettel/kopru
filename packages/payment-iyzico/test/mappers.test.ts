@@ -268,7 +268,7 @@ describe('toThreeDSCompletion', () => {
     expect(toThreeDSCompletion({ payload }, config)).toEqual({
       ok: true,
       value: {
-        orderId: 'ORDER-1',
+        callbackOrderId: 'ORDER-1',
         request: { locale: 'tr', conversationId: 'ORDER-1', paymentId: '42' },
       },
     });
@@ -279,7 +279,7 @@ describe('toThreeDSCompletion', () => {
     expect(withData).toEqual({
       ok: true,
       value: {
-        orderId: undefined,
+        callbackOrderId: undefined,
         request: { locale: 'tr', paymentId: '42', conversationData: 'abc' },
       },
     });

@@ -118,6 +118,37 @@ describe('iyzico provider against the mock server', () => {
       });
     });
 
+    it('takes the order id from the server response, not from the tamperable callback', async () => {
+      const payments = client();
+      const init = await payments.initThreeDS(threeDSInput());
+      if (!init.ok || init.value.action.type !== 'html') throw new Error('init failed');
+      const completed = await payments.completeThreeDS({
+        payload: { ...callbackFields(init.value.action.html), conversationId: 'ANOTHER-ORDER' },
+      });
+      expect(completed.ok && completed.value.orderId).toBe('ORDER-1');
+    });
+
+    it('falls back to the callback order id when the response has no basket id', async () => {
+      const http = stubHttp({
+        status: 200,
+        headers: {},
+        body: JSON.stringify({
+          status: 'success',
+          paymentId: '1',
+          basketId: '',
+          price: 1,
+          paidPrice: 1,
+          currency: 'TRY',
+          installment: 1,
+        }),
+      });
+      const payments = createPaymentClient({ provider: iyzico(mockConfig()), http });
+      const completed = await payments.completeThreeDS({
+        payload: { status: 'success', paymentId: '1', mdStatus: '1', conversationId: 'ORDER-7' },
+      });
+      expect(completed.ok && completed.value.orderId).toBe('ORDER-7');
+    });
+
     it('fails with PAYMENT_THREEDS_FAILED when mdStatus is not 1 (no auth call)', async () => {
       const payments = client();
       const init = await payments.initThreeDS(threeDSInput(IYZICO_MOCK_THREEDS_MD0_CARD));
