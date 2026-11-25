@@ -1,0 +1,32 @@
+{
+  "name": "@kopru/example-checkout-flow",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Köprü örneği: mock server'a karşı 3D Secure ödeme, kargo, takip ve iade akışı.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
+  },
+  "scripts": {
+    "start": "node src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf coverage .turbo"
+  },
+  "dependencies": {
+    "@kopru/core": "workspace:*",
+    "@kopru/iyzico": "workspace:*",
+    "@kopru/mock-server": "workspace:*",
+    "@kopru/yurtici": "workspace:*"
+  },
+  "devDependencies": {
+    "@kopru/eslint-config": "workspace:*",
+    "@kopru/tsconfig": "workspace:*",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.15.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.1"
+  }
+}

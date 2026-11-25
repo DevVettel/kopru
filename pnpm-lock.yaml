@@ -30,10 +30,44 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1(@types/node@22.20.5)(@vitest/coverage-v8@5.1.1)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(yaml@2.9.1))
 
-  packages/cargo-yurtici:
+  examples/checkout-flow:
     dependencies:
       '@kopru/core':
         specifier: workspace:*
+        version: link:../../packages/core
+      '@kopru/iyzico':
+        specifier: workspace:*
+        version: link:../../packages/payment-iyzico
+      '@kopru/mock-server':
+        specifier: workspace:*
+        version: link:../../packages/mock-server
+      '@kopru/yurtici':
+        specifier: workspace:*
+        version: link:../../packages/cargo-yurtici
+    devDependencies:
+      '@kopru/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@kopru/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
+      eslint:
+        specifier: ^10.15.0
+        version: 10.15.0
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^5.1.1
+        version: 5.1.1(@types/node@22.20.5)(@vitest/coverage-v8@5.1.1)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(yaml@2.9.1))
+
+  packages/cargo-yurtici:
+    dependencies:
+      '@kopru/core':
+        specifier: workspace:^
         version: link:../core
       zod:
         specifier: ^4.6.7
@@ -110,7 +144,7 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9(hono@4.13.19)
       '@kopru/core':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
       hono:
         specifier: ^4.13.19
@@ -147,7 +181,7 @@ importers:
   packages/payment-iyzico:
     dependencies:
       '@kopru/core':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
       zod:
         specifier: ^4.6.7

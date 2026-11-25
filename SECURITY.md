@@ -4,7 +4,7 @@ Köprü ödeme ve kişisel veri akışlarının arasında durduğu için güvenl
 
 ## Desteklenen sürümler
 
-Henüz yayımlanmış bir sürüm yok. Yayımlanana kadar yalnızca `main` dalı destekleniyor.
+`0.x` döneminde yalnızca en son yayımlanan sürüm ve `main` dalı destekleniyor.
 
 ## Açık bildirme
 

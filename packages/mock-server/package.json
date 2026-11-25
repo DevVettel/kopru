@@ -1,6 +1,6 @@
 {
   "name": "@kopru/mock-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Köprü sağlayıcı taklit sunucusu: deterministik senaryolarla entegrasyon testleri için Hono tabanlı mock server.",
   "keywords": [
     "kopru",
@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.1.9",
-    "@kopru/core": "workspace:*",
+    "@kopru/core": "workspace:^",
     "hono": "^4.13.19",
     "zod": "^4.6.7"
   },

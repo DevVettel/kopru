@@ -57,7 +57,7 @@ kopru/
 - Sağlayıcı paketleri yalnızca `@kopru/core`'a bağımlıdır; **birbirlerine asla bağımlı olamazlar.**
 - `@kopru/core` → `zod` dışında çalışma zamanı bağımlılığı minimum tutulur.
 - `@kopru/server`, sağlayıcıları `peerDependency` / dinamik kayıt ile kullanır; hepsini zorunlu olarak paketlemez.
-- Workspace içi bağımlılıklar `workspace:*` protokolü ile tanımlanır.
+- Yayımlanan paketlerin çalışma zamanındaki workspace bağımlılıkları `workspace:^` ile tanımlanır. Yayında `^0.1.0` gibi bir aralığa çevrilir; böylece core'un yama sürümünü alan kullanıcıda ikinci bir core kopyası oluşmaz ve `instanceof KopruError` çalışmaya devam eder. Geliştirme bağımlılıkları ve yayımlanmayan örnekler `workspace:*` kullanır.
 
 ### Paket çıktıları
 
@@ -179,6 +179,8 @@ Client, girdiye göre gereken yetenekleri de hesaplar (örn. `installments > 1` 
 4. Hata kodu eşleme tablosunu doldur.
 5. Mock server'a sağlayıcı senaryolarını ekle.
 6. Ortak sözleşme test paketini (contract test suite) geçir.
+
+Adım adım anlatım: [docs/guides/adding-a-provider.md](./docs/guides/adding-a-provider.md).
 
 ---
 
@@ -332,6 +334,12 @@ HTTP durum kodu kategoriye göre belirlenir (`validation` → 422, `config` → 
 | Sözleşme (contract) | Vitest + ortak test paketi | Her sağlayıcının core arayüzüne uyumu |
 | Entegrasyon         | Vitest + mock-server       | Uçtan uca akışlar                     |
 | Sandbox (opsiyonel) | Manuel / zamanlanmış CI    | Gerçek sağlayıcı sandbox'ları         |
+
+Örnek uygulamaların (`examples/*`) testleri de CI'da çalışır; böylece örnekler public API ile birlikte güncel kalır. Örnekler yayımlanmaz.
+
+### Yayın
+
+Sürümler Changesets ile yönetilir. npm yayını yalnızca elle başlatılan `release.yml` iş akışıyla yapılır; iş akışı varsayılan olarak deneme (`dry-run`) modundadır ve gerçek yayın `npm` ortamının onayına bağlıdır (bkz. [CONTRIBUTING.md](./CONTRIBUTING.md#sürüm-yayımlama)).
 
 ## 11. Mimari Karar Kayıtları (ADR)
 

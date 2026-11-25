@@ -22,7 +22,7 @@
 Köprü, Türkiye'deki banka sanal POS'larını, ödeme kuruluşlarını (iyzico, PayTR vb.), kargo firmalarını (Yurtiçi, Aras vb.) ve e-Fatura / e-Arşiv entegratörlerini tip güvenli tek bir TypeScript API'si ve standart bir JSON/REST arayüzü altında toplayan açık kaynak bir ara katmandır (middleware). Stripe ile Plaid'in global ekosisteme getirdiği geliştirici deneyimini yerel ekosisteme taşımayı hedefliyoruz.
 
 > [!WARNING]
-> Proje erken geliştirme aşamasında ve npm'de henüz yayımlanmış bir paket yok. Çekirdek paket (`@kopru/core`), mock sunucu (`@kopru/mock-server`) ve ilk sağlayıcılar (iyzico, Yurtiçi Kargo) tamamlandı. Sıradaki adım örnek uygulama, dokümantasyon ve `0.1.0` yayını. Ayrıntılar [yol haritasında](./ROADMAP.md).
+> Proje erken geliştirme aşamasında. Faz 1 (MVP) paketleri `0.1.0` için hazır ama npm'de henüz yayımlanmadı. Sağlayıcılar mock sunucuya karşı test edildi; iyzico sandbox'ı ve Yurtiçi'nin gerçek servisiyle henüz doğrulanmadı. Ayrıntılar [yol haritasında](./ROADMAP.md).
 
 ## Neden Köprü?
 
@@ -63,18 +63,15 @@ Köprü'de öncelik geliştirici deneyimidir (DX).
 
 ## Paketler
 
-| Paket                                          | Durum                    | Açıklama                                                                     |
-| ---------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------- |
-| [`@kopru/core`](./packages/core)               | Tamamlandı, yayımlanmadı | Ortak sözleşmeler, Zod şemaları, hata sınıfları, HTTP istemcisi, yardımcılar |
-| [`@kopru/mock-server`](./packages/mock-server) | Tamamlandı, yayımlanmadı | iyzico ve Yurtiçi senaryolarıyla çalışan sağlayıcı taklit sunucusu ve CLI    |
-| [`@kopru/iyzico`](./packages/payment-iyzico)   | Tamamlandı, yayımlanmadı | iyzico ödeme sağlayıcısı                                                     |
-| [`@kopru/yurtici`](./packages/cargo-yurtici)   | Tamamlandı, yayımlanmadı | Yurtiçi Kargo sağlayıcısı                                                    |
-| `@kopru/server`                                | Planlandı (Faz 2)        | Standart JSON/REST ara katmanı                                               |
+| Paket                                          | Durum                       | Açıklama                                                                     |
+| ---------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------- |
+| [`@kopru/core`](./packages/core)               | `0.1.0` hazır, yayımlanmadı | Ortak sözleşmeler, Zod şemaları, hata sınıfları, HTTP istemcisi, yardımcılar |
+| [`@kopru/mock-server`](./packages/mock-server) | `0.1.0` hazır, yayımlanmadı | iyzico ve Yurtiçi senaryolarıyla çalışan sağlayıcı taklit sunucusu ve CLI    |
+| [`@kopru/iyzico`](./packages/payment-iyzico)   | `0.1.0` hazır, yayımlanmadı | iyzico ödeme sağlayıcısı                                                     |
+| [`@kopru/yurtici`](./packages/cargo-yurtici)   | `0.1.0` hazır, yayımlanmadı | Yurtiçi Kargo sağlayıcısı                                                    |
+| `@kopru/server`                                | Planlandı (Faz 2)           | Standart JSON/REST ara katmanı                                               |
 
-## Hedeflenen kullanım
-
-> [!NOTE]
-> Örnek, hedeflenen API tasarımını gösteriyor ve değişebilir.
+## Kullanım
 
 ```ts
 import { createPaymentClient } from '@kopru/core';
@@ -85,9 +82,17 @@ const payments = createPaymentClient({
 });
 
 const result = await payments.charge({
+  orderId: 'S-1001',
   amount: { value: 15000, currency: 'TRY' }, // 150,00 TL; tutarlar her zaman kuruş cinsinden
   card: { number: '5528790000000008', expiry: '12/30', cvc: '123', holderName: 'Ada Lovelace' },
-  buyer: { id: 'u_1', email: 'ada@example.com', identityNumber: '11111111111' },
+  buyer: {
+    id: 'u_1',
+    firstName: 'Ada',
+    lastName: 'Lovelace',
+    email: 'ada@example.com',
+    identityNumber: '10000000146', // sentetik test TCKN'si
+    address: { cityCode: '34', district: 'Kadıköy', addressLine: 'Örnek Sokak No: 1' },
+  },
   installments: 1,
 });
 
@@ -97,6 +102,8 @@ if (result.ok) {
   console.error(result.error.code); // örn: "PAYMENT_CARD_DECLINED"
 }
 ```
+
+3D Secure ödeme, kargo, takip ve iadeyi uçtan uca gösteren, hesap gerektirmeyen örnek: [`examples/checkout-flow`](./examples/checkout-flow) (`pnpm example:checkout`).
 
 ## Geliştirme
 
@@ -114,14 +121,16 @@ Bütün komutlar ve PR süreci [katkı rehberinde](./CONTRIBUTING.md) anlatılı
 
 ## Dokümanlar
 
-| Doküman                                          | İçerik                                                    |
-| ------------------------------------------------ | --------------------------------------------------------- |
-| [ARCHITECTURE.md](./ARCHITECTURE.md)             | Teknik mimari, monorepo yapısı, sağlayıcı eklenti sistemi |
-| [ROADMAP.md](./ROADMAP.md)                       | MVP ve sonraki fazlar                                     |
-| [docs/plans/PHASE-1.md](./docs/plans/PHASE-1.md) | Faz 1'in görev bazlı uygulama planı                       |
-| [docs/adr](./docs/adr/)                          | Mimari karar kayıtları (ADR)                              |
-| [docs/GLOSSARY.md](./docs/GLOSSARY.md)           | Türkçe alan terimlerinin koddaki İngilizce karşılıkları   |
-| [CLAUDE.md](./CLAUDE.md)                         | Kod geliştirme kuralları ve standartlar                   |
+| Doküman                                                                              | İçerik                                                    |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)                                                 | Teknik mimari, monorepo yapısı, sağlayıcı eklenti sistemi |
+| [ROADMAP.md](./ROADMAP.md)                                                           | MVP ve sonraki fazlar                                     |
+| [docs/plans/PHASE-1.md](./docs/plans/PHASE-1.md)                                     | Faz 1'in görev bazlı uygulama planı                       |
+| [docs/guides/adding-a-provider.md](./docs/guides/adding-a-provider.md)               | Yeni sağlayıcı ekleme rehberi                             |
+| [docs/guides/testing-with-mock-server.md](./docs/guides/testing-with-mock-server.md) | Mock sunucu ile test, test kartları ve gönderileri        |
+| [docs/adr](./docs/adr/)                                                              | Mimari karar kayıtları (ADR)                              |
+| [docs/GLOSSARY.md](./docs/GLOSSARY.md)                                               | Türkçe alan terimlerinin koddaki İngilizce karşılıkları   |
+| [CLAUDE.md](./CLAUDE.md)                                                             | Kod geliştirme kuralları ve standartlar                   |
 
 ## Katkı
 

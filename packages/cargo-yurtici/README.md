@@ -5,7 +5,15 @@
 Köprü'nün [Yurtiçi Kargo](https://www.yurticikargo.com/) sağlayıcısı. Yurtiçi'nin SOAP tabanlı web servisini (`ShippingOrderDispatcherServices`) `@kopru/core` kargo sözleşmesinin arkasına yerleştirir: gönderi oluşturma, iptal ve hareket geçmişiyle takip, JSON dostu tek bir API ile yapılır. SOAP zarfları harici bir kütüphane kullanılmadan core'un XML yardımcılarıyla oluşturulur ([ADR-0004](../../docs/adr/0004-no-soap-library.md)).
 
 > [!WARNING]
-> Paket geliştirme aşamasında, npm'de henüz yayımlanmadı. Yurtiçi'nin web servis dokümanı herkese açık değil. Uygulama, açık kaynak entegrasyonların kaynak kodundan derlenen bilgilere dayanıyor ve gerçek servise karşı henüz doğrulanmadı. Ayrıntılar ve doğrulanması gereken varsayımlar: [`NOTES.md`](./NOTES.md).
+> Köprü `0.x` sürümlerinde. API, küçük (minor) sürümler arasında değişebilir. Yurtiçi'nin web servis dokümanı herkese açık değil. Uygulama, açık kaynak entegrasyonların kaynak kodundan derlenen bilgilere dayanıyor ve gerçek servise karşı henüz doğrulanmadı. Ayrıntılar ve doğrulanması gereken varsayımlar: [`NOTES.md`](./NOTES.md).
+
+## Kurulum
+
+```bash
+pnpm add @kopru/core @kopru/yurtici
+```
+
+Node.js 22 ya da üzeri gerekir.
 
 ## Yetenekler
 
@@ -16,7 +24,7 @@ Köprü'nün [Yurtiçi Kargo](https://www.yurticikargo.com/) sağlayıcısı. Yu
 | `trackShipment`  | ✅     | Durum + hareket geçmişi (eskiden yeniye)            |
 | `cashOnDelivery` | ❌     | Faz 2                                               |
 
-## Kurulum ve Konfigürasyon
+## Konfigürasyon
 
 ```ts
 import { createCargoClient } from '@kopru/core';

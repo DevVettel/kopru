@@ -185,7 +185,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M6: Örnek Uygulama, Dokümantasyon ve Yayın ⬜
+## M6: Örnek Uygulama, Dokümantasyon ve Yayın 🟨
 
 | ID   | Görev                                                                                                  | Notlar                                     |
 | ---- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
@@ -196,20 +196,22 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 | M6.5 | Changesets ile `0.1.0` sürümü; npm yayın iş akışı (`release.yml`)                                      | Yayın kullanıcı onayıyla yapılır           |
 | M6.6 | ROADMAP.md'de Faz 1'in tamamlandı olarak işaretlenmesi                                                 |                                            |
 
+**Durum (2026-11-25):** M6.1–M6.4 tamamlandı. M6.5'te sürümler `0.1.0`'a yükseltildi ve `release.yml` eklendi; npm yayını yapılmadı. Yayın iş akışı yalnızca elle başlatılır ve varsayılan olarak deneme modundadır. M6.6 (Faz 1'in tamamlandı sayılması) npm yayınını bekliyor. Örnek uygulama yazılırken `@kopru/iyzico`'nun 3DS sonucundaki `orderId` değerini kullanıcının değiştirebileceği callback'ten aldığı görüldü; değer artık sunucu yanıtındaki `basketId`'den alınıyor.
+
 ---
 
 ## 2. Faz 1 Tamamlanma Kriterleri (Definition of Done)
 
 ROADMAP.md'deki kriterlerin ölçülebilir hali:
 
-- [ ] Temiz bir klonda `pnpm install && pnpm build && pnpm test` kimlik bilgisi olmadan geçer.
+- [x] Temiz bir klonda `pnpm install && pnpm build && pnpm test` kimlik bilgisi olmadan geçer.
 - [ ] CI, Node 22 ve 24'te yeşildir.
-- [ ] `pnpm lint` sıfır uyarı ile geçer; kod tabanında `any` ve `@ts-ignore` yoktur.
-- [ ] iyzico ve Yurtiçi paketleri contract test paketini geçer.
-- [ ] `examples/checkout-flow` uçtan uca çalışır.
-- [ ] Core test kapsaması ≥ %90, sağlayıcı paketleri ≥ %80.
-- [ ] Tüm public API'ler Türkçe JSDoc ile belgelidir.
-- [ ] Log çıktılarında hassas veri bulunmadığı bir testle doğrulanmıştır.
+- [x] `pnpm lint` sıfır uyarı ile geçer; kod tabanında `any` ve `@ts-ignore` yoktur.
+- [x] iyzico ve Yurtiçi paketleri contract test paketini geçer.
+- [x] `examples/checkout-flow` uçtan uca çalışır.
+- [x] Core test kapsaması ≥ %90, sağlayıcı paketleri ≥ %80.
+- [x] Tüm public API'ler Türkçe JSDoc ile belgelidir.
+- [x] Log çıktılarında hassas veri bulunmadığı bir testle doğrulanmıştır.
 
 ## 3. Riskler
 
