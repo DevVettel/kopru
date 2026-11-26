@@ -1,0 +1,24 @@
+{
+  "name": "@kopru/package-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Yayımlanacak paketlerin tarball'larını boş bir projeye kurup ESM ve CJS olarak dener.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
+  },
+  "scripts": {
+    "smoke": "node src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "clean": "rm -rf .turbo"
+  },
+  "devDependencies": {
+    "@kopru/eslint-config": "workspace:*",
+    "@kopru/tsconfig": "workspace:*",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.15.0",
+    "typescript": "~6.0.3"
+  }
+}

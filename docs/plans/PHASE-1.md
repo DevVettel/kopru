@@ -187,16 +187,19 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ## M6: Örnek Uygulama, Dokümantasyon ve Yayın 🟨
 
-| ID   | Görev                                                                                                  | Notlar                                     |
-| ---- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| M6.1 | `examples/checkout-flow`: mock server'a karşı ödeme (3DS dahil) → kargo oluşturma → takip → iade akışı | Kimlik bilgisi gerektirmez                 |
-| M6.2 | `docs/guides/adding-a-provider.md`                                                                     | ARCHITECTURE.md §4.5'in genişletilmiş hali |
-| M6.3 | `docs/guides/testing-with-mock-server.md`                                                              | Test kartları ve takip numaraları tablosu  |
-| M6.4 | `CONTRIBUTING.md` son hali                                                                             |                                            |
-| M6.5 | Changesets ile `0.1.0` sürümü; npm yayın iş akışı (`release.yml`)                                      | Yayın kullanıcı onayıyla yapılır           |
-| M6.6 | ROADMAP.md'de Faz 1'in tamamlandı olarak işaretlenmesi                                                 |                                            |
+| ID   | Görev                                                                                                  | Notlar                                      |
+| ---- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------- |
+| M6.1 | `examples/checkout-flow`: mock server'a karşı ödeme (3DS dahil) → kargo oluşturma → takip → iade akışı | Kimlik bilgisi gerektirmez                  |
+| M6.2 | `docs/guides/adding-a-provider.md`                                                                     | ARCHITECTURE.md §4.5'in genişletilmiş hali  |
+| M6.3 | `docs/guides/testing-with-mock-server.md`                                                              | Test kartları ve takip numaraları tablosu   |
+| M6.4 | `CONTRIBUTING.md` son hali                                                                             |                                             |
+| M6.5 | Changesets ile `0.1.0` sürümü; npm yayın iş akışı (`release.yml`)                                      | Yayın kullanıcı onayıyla yapılır            |
+| M6.6 | ROADMAP.md'de Faz 1'in tamamlandı olarak işaretlenmesi                                                 |                                             |
+| M6.7 | Paket duman testi (`tooling/package-smoke`)                                                            | Tarball → boş proje; ESM/CJS tip ve çalışma |
 
-**Durum (2026-11-25):** M6.1–M6.4 tamamlandı. M6.5'te sürümler `0.1.0`'a yükseltildi ve `release.yml` eklendi; npm yayını yapılmadı. Yayın iş akışı yalnızca elle başlatılır ve varsayılan olarak deneme modundadır. M6.6 (Faz 1'in tamamlandı sayılması) npm yayınını bekliyor. Örnek uygulama yazılırken `@kopru/iyzico`'nun 3DS sonucundaki `orderId` değerini kullanıcının değiştirebileceği callback'ten aldığı görüldü; değer artık sunucu yanıtındaki `basketId`'den alınıyor.
+**Durum (2026-11-25):** M6.1–M6.4 tamamlandı. M6.5'te sürümler `0.1.0`'a yükseltildi ve `release.yml` eklendi; npm yayını yapılmadı. Yayın iş akışı yalnızca elle başlatılır ve varsayılan olarak deneme modundadır. M6.6 (Faz 1'in tamamlandı sayılması) npm yayınını bekliyor.
+
+**Durum (2026-11-26):** M6.7 eklendi. `pnpm smoke:packages`, dört paketi `pnpm pack` ile paketleyip boş bir projeye npm ile kurar; `moduleResolution: nodenext` altında ESM (`.d.ts`) ve CJS (`.d.cts`) tüketicilerini derler ve çalıştırır (mock server'a karşı ödeme, ret hatasında `instanceof KopruError`, kargo takibi), `kopru-mock` CLI'ını dener. Test CI'da Node 22 ve 24'te ve `release.yml` denemesinde çalışır. Bu sırada paket tarball'larında `LICENSE` dosyasının olmadığı görüldü; her yayımlanan pakete kök lisansın kopyası eklendi. Örnek uygulama yazılırken `@kopru/iyzico`'nun 3DS sonucundaki `orderId` değerini kullanıcının değiştirebileceği callback'ten aldığı görüldü; değer artık sunucu yanıtındaki `basketId`'den alınıyor.
 
 ---
 
@@ -205,7 +208,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 ROADMAP.md'deki kriterlerin ölçülebilir hali:
 
 - [x] Temiz bir klonda `pnpm install && pnpm build && pnpm test` kimlik bilgisi olmadan geçer.
-- [ ] CI, Node 22 ve 24'te yeşildir.
+- [x] CI, Node 22 ve 24'te yeşildir.
 - [x] `pnpm lint` sıfır uyarı ile geçer; kod tabanında `any` ve `@ts-ignore` yoktur.
 - [x] iyzico ve Yurtiçi paketleri contract test paketini geçer.
 - [x] `examples/checkout-flow` uçtan uca çalışır.

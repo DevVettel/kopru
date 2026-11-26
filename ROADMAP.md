@@ -82,6 +82,7 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 
 - [x] Paketlerin `0.1.0` sürümüne yükseltilmesi ve `CHANGELOG.md` dosyaları
 - [x] Elle başlatılan npm yayın iş akışı (`release.yml`)
+- [x] Paket duman testi: tarball'ların boş bir projeye kurulup ESM ve CJS olarak denenmesi (`pnpm smoke:packages`, CI'da)
 - [ ] npm'de `@kopru` scope'unun alınması ve `0.1.0` yayını
 
 ### Faz 1 Tamamlanma Kriterleri

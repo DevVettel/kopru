@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "example:checkout": "turbo run build --filter=@kopru/example-checkout-flow^... --output-logs=errors-only && pnpm --filter @kopru/example-checkout-flow start",
+    "smoke:packages": "turbo run build --filter=./packages/* --output-logs=errors-only && pnpm --filter @kopru/package-smoke smoke",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "clean": "turbo run clean && rm -rf node_modules/.cache coverage .turbo"
