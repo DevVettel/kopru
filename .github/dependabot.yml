@@ -21,6 +21,9 @@ updates:
       # typescript-eslint TS 7'yi desteklemediği için TypeScript ~6.0'a sabitlendi.
       - dependency-name: typescript
         update-types: [version-update:semver-major]
+      # @types/node, desteklenen Node sürümleriyle (engines: 22 / 24) uyumlu kalmalı.
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
 
   - package-ecosystem: github-actions
     directory: /

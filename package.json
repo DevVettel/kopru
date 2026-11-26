@@ -17,7 +17,7 @@
     "example:checkout": "turbo run build --filter=@kopru/example-checkout-flow^... --output-logs=errors-only && pnpm --filter @kopru/example-checkout-flow start",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "clean": "turbo run clean && rm -rf node_modules/.cache"
+    "clean": "turbo run clean && rm -rf node_modules/.cache coverage .turbo"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
