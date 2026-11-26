@@ -22,7 +22,7 @@
 Köprü, Türkiye'deki banka sanal POS'larını, ödeme kuruluşlarını (iyzico, PayTR vb.), kargo firmalarını (Yurtiçi, Aras vb.) ve e-Fatura / e-Arşiv entegratörlerini tip güvenli tek bir TypeScript API'si ve standart bir JSON/REST arayüzü altında toplayan açık kaynak bir ara katmandır (middleware). Stripe ile Plaid'in global ekosisteme getirdiği geliştirici deneyimini yerel ekosisteme taşımayı hedefliyoruz.
 
 > [!WARNING]
-> Proje erken geliştirme aşamasında. Faz 1 (MVP) paketleri `0.1.0` için hazır ama npm'de henüz yayımlanmadı. Sağlayıcılar mock sunucuya karşı test edildi; iyzico sandbox'ı ve Yurtiçi'nin gerçek servisiyle henüz doğrulanmadı. Ayrıntılar [yol haritasında](./ROADMAP.md).
+> Proje erken geliştirme aşamasında. Faz 1 (MVP) paketleri npm'de `0.1.0` olarak yayımlandı; `0.x` sürümlerinde kırıcı değişiklikler olabilir. Sağlayıcılar mock sunucuya karşı test edildi; iyzico sandbox'ı ve Yurtiçi'nin gerçek servisiyle henüz doğrulanmadı. Ayrıntılar [yol haritasında](./ROADMAP.md).
 
 ## Neden Köprü?
 
@@ -63,13 +63,13 @@ Köprü'de öncelik geliştirici deneyimidir (DX).
 
 ## Paketler
 
-| Paket                                          | Durum                       | Açıklama                                                                     |
-| ---------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------- |
-| [`@kopru/core`](./packages/core)               | `0.1.0` hazır, yayımlanmadı | Ortak sözleşmeler, Zod şemaları, hata sınıfları, HTTP istemcisi, yardımcılar |
-| [`@kopru/mock-server`](./packages/mock-server) | `0.1.0` hazır, yayımlanmadı | iyzico ve Yurtiçi senaryolarıyla çalışan sağlayıcı taklit sunucusu ve CLI    |
-| [`@kopru/iyzico`](./packages/payment-iyzico)   | `0.1.0` hazır, yayımlanmadı | iyzico ödeme sağlayıcısı                                                     |
-| [`@kopru/yurtici`](./packages/cargo-yurtici)   | `0.1.0` hazır, yayımlanmadı | Yurtiçi Kargo sağlayıcısı                                                    |
-| `@kopru/server`                                | Planlandı (Faz 2)           | Standart JSON/REST ara katmanı                                               |
+| Paket                                          | Durum              | Açıklama                                                                     |
+| ---------------------------------------------- | ------------------ | ---------------------------------------------------------------------------- |
+| [`@kopru/core`](./packages/core)               | `0.1.0` yayımlandı | Ortak sözleşmeler, Zod şemaları, hata sınıfları, HTTP istemcisi, yardımcılar |
+| [`@kopru/mock-server`](./packages/mock-server) | `0.1.0` yayımlandı | iyzico ve Yurtiçi senaryolarıyla çalışan sağlayıcı taklit sunucusu ve CLI    |
+| [`@kopru/iyzico`](./packages/payment-iyzico)   | `0.1.0` yayımlandı | iyzico ödeme sağlayıcısı                                                     |
+| [`@kopru/yurtici`](./packages/cargo-yurtici)   | `0.1.0` yayımlandı | Yurtiçi Kargo sağlayıcısı                                                    |
+| `@kopru/server`                                | Planlandı (Faz 2)  | Standart JSON/REST ara katmanı                                               |
 
 ## Kullanım
 

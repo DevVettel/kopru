@@ -185,7 +185,7 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 
 ---
 
-## M6: Örnek Uygulama, Dokümantasyon ve Yayın 🟨
+## M6: Örnek Uygulama, Dokümantasyon ve Yayın ✅
 
 | ID   | Görev                                                                                                  | Notlar                                      |
 | ---- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------- |
@@ -200,6 +200,8 @@ M4 ve M5 birbirinden bağımsızdır ve paralel yürütülebilir.
 **Durum (2026-11-25):** M6.1–M6.4 tamamlandı. M6.5'te sürümler `0.1.0`'a yükseltildi ve `release.yml` eklendi; npm yayını yapılmadı. Yayın iş akışı yalnızca elle başlatılır ve varsayılan olarak deneme modundadır. M6.6 (Faz 1'in tamamlandı sayılması) npm yayınını bekliyor.
 
 **Durum (2026-11-26):** M6.7 eklendi. `pnpm smoke:packages`, dört paketi `pnpm pack` ile paketleyip boş bir projeye npm ile kurar; `moduleResolution: nodenext` altında ESM (`.d.ts`) ve CJS (`.d.cts`) tüketicilerini derler ve çalıştırır (mock server'a karşı ödeme, ret hatasında `instanceof KopruError`, kargo takibi), `kopru-mock` CLI'ını dener. Test CI'da Node 22 ve 24'te ve `release.yml` denemesinde çalışır. Bu sırada paket tarball'larında `LICENSE` dosyasının olmadığı görüldü; her yayımlanan pakete kök lisansın kopyası eklendi. Örnek uygulama yazılırken `@kopru/iyzico`'nun 3DS sonucundaki `orderId` değerini kullanıcının değiştirebileceği callback'ten aldığı görüldü; değer artık sunucu yanıtındaki `basketId`'den alınıyor.
+
+**Durum (2026-11-26, yayın):** `@kopru` organizasyonu npm'de oluşturuldu ve dört paket `0.1.0` olarak yerelden, 2FA ile yayımlandı; sürüm etiketleri GitHub'a gönderildi. Yayın sırasında npm'in staged publishing akışı her pakete herkese açık bir `0.0.0-stage` yer tutucu sürümü ekledi; `latest` etiketi `0.1.0`'ı gösterir. Sonraki yayınlar `release.yml` üzerinden trusted publishing (OIDC) ile yapılacak. M6.6 ile Faz 1 tamamlandı.
 
 ---
 

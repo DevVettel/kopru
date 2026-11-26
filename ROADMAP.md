@@ -6,7 +6,7 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 
 ---
 
-## Faz 1: MVP
+## Faz 1: MVP ✅
 
 **Hedef:** Mimarinin uçtan uca çalıştığını kanıtlamak. Tek bir ödeme ve tek bir kargo sağlayıcısı ile, gerçek sağlayıcı hesabı gerektirmeden yerelde test edilebilen, tip güvenli bir çekirdek.
 
@@ -78,12 +78,12 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 - [x] "Yeni sağlayıcı nasıl eklenir" [rehberi](./docs/guides/adding-a-provider.md)
 - [x] `CONTRIBUTING.md`
 
-### 1.6 Yayın 🟨
+### 1.6 Yayın ✅
 
 - [x] Paketlerin `0.1.0` sürümüne yükseltilmesi ve `CHANGELOG.md` dosyaları
 - [x] Elle başlatılan npm yayın iş akışı (`release.yml`)
 - [x] Paket duman testi: tarball'ların boş bir projeye kurulup ESM ve CJS olarak denenmesi (`pnpm smoke:packages`, CI'da)
-- [ ] npm'de `@kopru` scope'unun alınması ve `0.1.0` yayını
+- [x] npm'de `@kopru` scope'unun alınması ve `0.1.0` yayını
 
 ### Faz 1 Tamamlanma Kriterleri
 
