@@ -39,6 +39,7 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm example:checkout
+      - run: pnpm --filter @kopru/package-smoke smoke
       - run: pnpm -r publish --dry-run --no-git-checks
 
   publish:

@@ -1,0 +1,10 @@
+{
+  "extends": "@kopru/tsconfig/base.json",
+  "compilerOptions": {
+    // Betik derlenmez; Node.js tip silme (type stripping) ile doğrudan çalıştırılır.
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
+  },
+  // fixtures/ bu projede değil, kurulan paketlerle tüketici projede tip kontrolünden geçer.
+  "include": ["src"]
+}

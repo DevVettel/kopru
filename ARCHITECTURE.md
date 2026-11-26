@@ -29,7 +29,9 @@ kopru/
 │   └── mock-server/           # @kopru/mock-server — sağlayıcı taklit sunucusu
 ├── tooling/
 │   ├── tsconfig/              # Paylaşılan tsconfig tabanları (strict)
-│   └── eslint-config/         # Paylaşılan lint kuralları
+│   ├── eslint-config/         # Paylaşılan lint kuralları
+│   ├── tsup-config/           # Paylaşılan build ayarları (ESM + CJS + .d.ts)
+│   └── package-smoke/         # Yayın öncesi paket duman testi (tarball → boş proje)
 ├── examples/                  # Örnek uygulamalar
 ├── docs/                      # Ek dokümanlar, ADR'ler
 ├── pnpm-workspace.yaml

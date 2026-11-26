@@ -35,26 +35,27 @@ Büyük bir değişikliğe başlamadan önce issue açıp konuşmak, boşa emek 
 
 ## Depo yapısı
 
-| Dizin       | İçerik                                                  |
-| ----------- | ------------------------------------------------------- |
-| `packages/` | npm'e yayımlanan paketler                               |
-| `examples/` | Yayımlanmayan örnek uygulamalar; testleri CI'da çalışır |
-| `tooling/`  | Paylaşılan TypeScript, ESLint ve tsup ayarları          |
-| `docs/`     | Rehberler, ADR'ler, planlar ve terimler sözlüğü         |
+| Dizin       | İçerik                                                            |
+| ----------- | ----------------------------------------------------------------- |
+| `packages/` | npm'e yayımlanan paketler                                         |
+| `examples/` | Yayımlanmayan örnek uygulamalar; testleri CI'da çalışır           |
+| `tooling/`  | Paylaşılan TypeScript, ESLint ve tsup ayarları; paket duman testi |
+| `docs/`     | Rehberler, ADR'ler, planlar ve terimler sözlüğü                   |
 
 ## Sık kullanılan komutlar
 
-| Komut                   | Açıklama                                   |
-| ----------------------- | ------------------------------------------ |
-| `pnpm build`            | Tüm paketleri derler (ESM + CJS + `.d.ts`) |
-| `pnpm typecheck`        | Strict mode tip kontrolü                   |
-| `pnpm lint`             | ESLint (type-aware) kontrolü               |
-| `pnpm test`             | Tüm paketlerin testlerini çalıştırır       |
-| `pnpm test:coverage`    | Testleri kapsama raporuyla çalıştırır      |
-| `pnpm format`           | Prettier ile biçimlendirir                 |
-| `pnpm format:check`     | Biçimlendirmeyi denetler (CI'da zorunlu)   |
-| `pnpm example:checkout` | Örnek alışveriş akışını çalıştırır         |
-| `pnpm changeset`        | Sürüm notu (changeset) ekler               |
+| Komut                   | Açıklama                                                                               |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| `pnpm build`            | Tüm paketleri derler (ESM + CJS + `.d.ts`)                                             |
+| `pnpm typecheck`        | Strict mode tip kontrolü                                                               |
+| `pnpm lint`             | ESLint (type-aware) kontrolü                                                           |
+| `pnpm test`             | Tüm paketlerin testlerini çalıştırır                                                   |
+| `pnpm test:coverage`    | Testleri kapsama raporuyla çalıştırır                                                  |
+| `pnpm format`           | Prettier ile biçimlendirir                                                             |
+| `pnpm format:check`     | Biçimlendirmeyi denetler (CI'da zorunlu)                                               |
+| `pnpm example:checkout` | Örnek alışveriş akışını çalıştırır                                                     |
+| `pnpm smoke:packages`   | Paketleri tarball olarak boş bir projeye kurar; ESM/CJS tiplerini ve çalışmasını dener |
+| `pnpm changeset`        | Sürüm notu (changeset) ekler                                                           |
 
 Tek bir paket üzerinde çalışırken filtre kullanabilirsiniz: `pnpm --filter @kopru/core test`
 
@@ -101,7 +102,7 @@ Mimariyi etkileyen bir değişiklik önerecekseniz önce [docs/adr](./docs/adr/)
 Bu bölüm depo yöneticileri içindir. Sürümler [Changesets](./.changeset/README.md) ile yönetilir.
 
 1. `pnpm version-packages` bekleyen changeset'leri tüketir, sürümleri yükseltir ve `CHANGELOG.md` dosyalarını yazar. Sonuç bir PR ile `main` dalına alınır.
-2. GitHub Actions'ta **Release** iş akışı önce `dry-run` işaretli olarak çalıştırılır.
+2. GitHub Actions'ta **Release** iş akışı önce `dry-run` işaretli olarak çalıştırılır. Deneme; testlere, örnek uygulamaya ve paket duman testine (`pnpm smoke:packages`) ek olarak `pnpm publish --dry-run` çıktısını da içerir.
 3. Deneme temizse iş akışı `main` dalında `dry-run` kapalı olarak yeniden başlatılır. Yayın, `npm` ortamındaki onaydan sonra yapılır ve sürüm etiketleri depoya gönderilir.
 
 Ön koşullar: npm'de `@kopru` scope'una yayın yetkisi, depoda `npm` adlı bir ortam (onaylayıcı tanımlı) ve bu ortamda `NPM_TOKEN` secret'ı.
