@@ -51,7 +51,10 @@ jobs:
     environment: npm
     permissions:
       contents: write # git etiketleri
-      id-token: write # npm provenance
+      # npm trusted publishing (OIDC): kalıcı npm token'ı kullanılmaz, provenance otomatik üretilir.
+      # Her pakette npmjs.com → Settings → Trusted publishing altında bu iş akışı (`release.yml`)
+      # ve `npm` ortamı tanımlı olmalıdır (bkz. CONTRIBUTING.md#sürüm-yayımlama).
+      id-token: write
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -60,10 +63,16 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      # pnpm publish, yayını npm CLI'a devreder; trusted publishing npm >= 11.5.1 ister.
+      - name: Check npm version
+        run: |
+          node -e '
+            const [major, minor, patch] = process.argv[1].split(".").map(Number);
+            const ok = major > 11 || (major === 11 && (minor > 5 || (minor === 5 && patch >= 1)));
+            if (!ok) { console.error(`npm ${process.argv[1]} is too old; trusted publishing needs >= 11.5.1`); process.exit(1); }
+          ' "$(npm --version)"
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: 'true'
       - run: git push origin --tags

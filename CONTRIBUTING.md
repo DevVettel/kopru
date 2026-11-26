@@ -101,8 +101,39 @@ Mimariyi etkileyen bir değişiklik önerecekseniz önce [docs/adr](./docs/adr/)
 
 Bu bölüm depo yöneticileri içindir. Sürümler [Changesets](./.changeset/README.md) ile yönetilir.
 
+npm'e yayın, kalıcı bir token yerine [trusted publishing (OIDC)](https://docs.npmjs.com/trusted-publishers) ile yapılır. npm, 2FA'yı atlayan token'ların doğrudan yayın yetkisini 2027 başında kaldırıyor; depoda `NPM_TOKEN` tutulmaz.
+
 1. `pnpm version-packages` bekleyen changeset'leri tüketir, sürümleri yükseltir ve `CHANGELOG.md` dosyalarını yazar. Sonuç bir PR ile `main` dalına alınır.
 2. GitHub Actions'ta **Release** iş akışı önce `dry-run` işaretli olarak çalıştırılır. Deneme; testlere, örnek uygulamaya ve paket duman testine (`pnpm smoke:packages`) ek olarak `pnpm publish --dry-run` çıktısını da içerir.
 3. Deneme temizse iş akışı `main` dalında `dry-run` kapalı olarak yeniden başlatılır. Yayın, `npm` ortamındaki onaydan sonra yapılır ve sürüm etiketleri depoya gönderilir.
 
-Ön koşullar: npm'de `@kopru` scope'una yayın yetkisi, depoda `npm` adlı bir ortam (onaylayıcı tanımlı) ve bu ortamda `NPM_TOKEN` secret'ı.
+Ön koşullar: npm'de `@kopru` organizasyonunda yayın yetkisi, depoda `npm` adlı bir ortam (onaylayıcı tanımlı, yalnızca `main` dalı) ve her pakette tanımlı bir trusted publisher.
+
+### Trusted publisher ayarı
+
+Her paket için npmjs.com'da **Settings → Trusted publishing → GitHub Actions** altında:
+
+| Alan                 | Değer                  |
+| -------------------- | ---------------------- |
+| Organization or user | `DevVettel`            |
+| Repository           | `kopru`                |
+| Workflow filename    | `release.yml`          |
+| Environment name     | `npm`                  |
+| Allowed actions      | `npm publish` işaretli |
+
+Yeni bir ayar 2 gün içinde ilk başarılı yayınla doğrulanmazsa geçersiz olur; ayarı yayından hemen önce yapın. Yayın çalıştıktan sonra **Settings → Publishing access** altında "Require two-factor authentication and disallow tokens" seçilir.
+
+### İlk yayın (paket npm'de henüz yokken)
+
+Trusted publisher yalnızca npm'de var olan bir pakete tanımlanabildiği için bir paketin ilk sürümü yerelden, 2FA ile yayımlanır:
+
+```bash
+git switch main && git pull
+pnpm install --frozen-lockfile
+pnpm smoke:packages          # derler ve tarball'ları dener
+npm login                    # tarayıcıda 2FA ile
+pnpm changeset publish       # OTP sorulur; yayımlanmamış sürümleri yayımlar ve etiketler
+git push origin --tags
+```
+
+Ardından yeni paket için yukarıdaki trusted publisher ayarı yapılır. Sonraki sürümler Release iş akışıyla çıkar.
