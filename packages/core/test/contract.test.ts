@@ -1,6 +1,8 @@
 import { runCargoProviderContract, runPaymentProviderContract } from '../src/testing/index.js';
 import {
   DECLINED_CARD,
+  fakeNotification,
+  installmentQueryInput,
   chargeInput,
   fakeCargo,
   fakeCargoBasic,
@@ -16,6 +18,14 @@ runPaymentProviderContract({
     successfulCharge: chargeInput,
     declinedCharge: { ...chargeInput, card: { ...chargeInput.card, number: DECLINED_CARD } },
     threeDSInit: threeDSInput,
+    installmentQuery: installmentQueryInput,
+    notification: {
+      valid: fakeNotification({ orderId: 'ORDER-1', status: 'success' }),
+      tampered: {
+        ...fakeNotification({ orderId: 'ORDER-1', status: 'success' }),
+        body: 'orderId=ORDER-1&status=failed',
+      },
+    },
   },
 });
 

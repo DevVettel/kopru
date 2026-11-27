@@ -3,6 +3,9 @@ import {
   CardSchema,
   ChargeRequestSchema,
   CreateShipmentRequestSchema,
+  InstallmentQueryResultSchema,
+  NotificationRequestSchema,
+  PaymentNotificationSchema,
   RefundRequestSchema,
   ShipmentLookupSchema,
   ThreeDSActionSchema,
@@ -139,5 +142,62 @@ describe('kargo şemaları', () => {
       TrackingEventSchema.safeParse({ ...event, occurredAt: '2026-11-18 13:00' }).success,
     ).toBe(false);
     expect(TrackingEventSchema.safeParse({ ...event, status: 'lost' }).success).toBe(false);
+  });
+});
+
+describe('taksit sorgusu şemaları', () => {
+  const money = (value: number) => ({ value, currency: 'TRY' as const });
+  const option = (installments: number, total = 1000) => ({
+    installments,
+    installmentAmount: money(Math.ceil(total / installments)),
+    totalAmount: money(total),
+  });
+
+  it('artan sıralı ve tekil seçenekleri kabul eder', () => {
+    const result = InstallmentQueryResultSchema.safeParse({
+      bin: '41111111',
+      cardType: 'credit',
+      cardScheme: 'troy',
+      options: [option(1), option(3, 1050)],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it.each([
+    ['tekrarlanan taksit sayısı', [option(1), option(1)]],
+    ['azalan sıra', [option(3), option(1)]],
+    ['boş liste', []],
+    [
+      'karışık para birimi',
+      [option(1), { ...option(3), totalAmount: { value: 1000, currency: 'USD' } }],
+    ],
+  ])('%s reddedilir', (_label, options) => {
+    expect(InstallmentQueryResultSchema.safeParse({ bin: '41111111', options }).success).toBe(
+      false,
+    );
+  });
+});
+
+describe('bildirim şemaları', () => {
+  it('başlıkları küçük harfe çevirir, başlık verilmezse boş nesne kullanır', () => {
+    expect(NotificationRequestSchema.parse({ headers: { 'X-Sig': 'a' }, body: '' })).toEqual({
+      headers: { 'x-sig': 'a' },
+      body: '',
+    });
+    expect(NotificationRequestSchema.parse({ body: '{}' }).headers).toEqual({});
+  });
+
+  it('failure alanına yalnızca başarısız bildirimde izin verir', () => {
+    const base = { orderId: 'O-1', providerStatus: 'SUCCESS' };
+    const failure = { code: 'PAYMENT_CARD_DECLINED' };
+    expect(PaymentNotificationSchema.safeParse({ ...base, status: 'succeeded' }).success).toBe(
+      true,
+    );
+    expect(
+      PaymentNotificationSchema.safeParse({ ...base, status: 'succeeded', failure }).success,
+    ).toBe(false);
+    expect(
+      PaymentNotificationSchema.safeParse({ ...base, status: 'failed', failure }).success,
+    ).toBe(true);
   });
 });

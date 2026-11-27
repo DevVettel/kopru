@@ -66,3 +66,30 @@ export function safeEqual(a: string, b: string): boolean {
   const right = Buffer.from(b, 'utf8');
   return left.length === right.length && timingSafeEqual(left, right);
 }
+
+/** `verifyHmacSignature` girdisi. */
+export interface VerifyHmacSignatureOptions {
+  algorithm: HashAlgorithm;
+  /** Gizli anahtar. */
+  key: string | Uint8Array;
+  /** İmzalanan veri (örn. ham gövde veya alanların birleşimi). */
+  data: string | Uint8Array;
+  /** Karşı taraftan gelen imza. */
+  signature: string;
+  /** İmzanın kodlaması. `hex` imzalar büyük/küçük harf duyarsız karşılaştırılır. */
+  encoding: DigestEncoding;
+}
+
+/**
+ * Gelen HMAC imzasını hesaplanan imzayla sabit sürede karşılaştırır.
+ * Webhook/bildirim imzalarının doğrulanmasında kullanılır.
+ *
+ * @returns İmza geçerliyse `true`
+ */
+export function verifyHmacSignature(options: VerifyHmacSignatureOptions): boolean {
+  const expected = hmac(options.algorithm, options.key, options.data, options.encoding);
+  const received = options.signature.trim();
+  return options.encoding === 'hex'
+    ? safeEqual(expected, received.toLowerCase())
+    : safeEqual(expected, received);
+}

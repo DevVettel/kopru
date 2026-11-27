@@ -1,6 +1,8 @@
 import type { KopruError } from '../../errors/kopru-error.js';
 import type { ProviderContext } from '../../provider/context.js';
 import type { Result } from '../../result/result.js';
+import type { InstallmentQueryRequest, InstallmentQueryResult } from './installments.js';
+import type { NotificationRequest, PaymentNotificationResult } from './notifications.js';
 import type {
   ChargeRequest,
   ChargeResult,
@@ -18,6 +20,8 @@ export const PAYMENT_CAPABILITIES = [
   'refund',
   'refund.partial',
   'installments',
+  'installments.query',
+  'notifications',
 ] as const;
 
 /** Ödeme sağlayıcısı yeteneği. */
@@ -44,6 +48,14 @@ export interface PaymentOperations {
     input: RefundRequest,
     ctx: ProviderContext,
   ) => Promise<Result<RefundResult, KopruError>>;
+  queryInstallments?: (
+    input: InstallmentQueryRequest,
+    ctx: ProviderContext,
+  ) => Promise<Result<InstallmentQueryResult, KopruError>>;
+  parseNotification?: (
+    input: NotificationRequest,
+    ctx: ProviderContext,
+  ) => Promise<Result<PaymentNotificationResult, KopruError>>;
 }
 
 /**

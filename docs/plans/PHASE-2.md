@@ -10,9 +10,9 @@ Bu doküman, [ROADMAP.md](../../ROADMAP.md) içindeki Faz 2 hedeflerini sıralı
 
 ---
 
-## 0. Faz Başında Verilecek Kararlar (Önerilen)
+## 0. Faz Başında Verilen Kararlar
 
-Aşağıdaki kararlar **önerilmiştir ve onay beklemektedir.** Onaylananlar [docs/adr](../adr/README.md) altında ADR olarak kayda geçirilir, ardından ilgili kilometre taşının kodlamasına başlanır.
+Aşağıdaki kararlar 2026-11-27 tarihinde onaylanmıştır. K1–K5 [docs/adr](../adr/README.md) altında ADR-0007…0010 olarak kayda geçirilmiştir; K6–K8 bu dokümanda ve ARCHITECTURE §7'de tanımlıdır.
 
 | #   | Karar                              | Öneri                                                                                                                                                                                                                                | Gerekçe                                                                                                                                                                                           |
 | --- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25,7 +25,7 @@ Aşağıdaki kararlar **önerilmiştir ve onay beklemektedir.** Onaylananlar [do
 | K7  | Server'da sağlayıcı konfigürasyonu | Ortam değişkenleri (`KOPRU_IYZICO_API_KEY` …) **veya** `kopru.config.json`; ikisi de Zod ile doğrulanır. Programatik kullanımda `createServer({ payment, cargo })`                                                                   | Docker'da ortam değişkeni, kütüphane olarak kullanımda kod tabanlı konfigürasyon doğal olandır.                                                                                                   |
 | K8  | Sürüm                              | Faz 2 sonunda tüm paketler **`0.2.0`**; core sözleşme değişiklikleri `0.x` kuralı gereği minor ile yayımlanır                                                                                                                        | Changesets ile; trusted publishing (OIDC) ilk kez bu yayında kullanılır.                                                                                                                          |
 
-Yeni hata kodları (kataloğa eklenecek): `WEBHOOK_SIGNATURE_INVALID`, `IDEMPOTENCY_KEY_CONFLICT`, `PAYMENT_INSTALLMENT_NOT_AVAILABLE`. Yeni terimler (bildirim, BIN sorgusu, taksit seçeneği, idempotency anahtarı) kodlanmadan önce [GLOSSARY.md](../GLOSSARY.md)'ye eklenir.
+Yeni hata kodları: `WEBHOOK_SIGNATURE_INVALID` ve `PAYMENT_INSTALLMENT_NOT_AVAILABLE` M7'de; `IDEMPOTENCY_KEY_CONFLICT` anlamı sunucu davranışına bağlı olduğu için M11'de eklenir. Yeni terimler [GLOSSARY.md](../GLOSSARY.md)'ye eklenmiştir.
 
 ---
 
@@ -44,7 +44,7 @@ M8, M9, M10 ve M11 birbirinden bağımsızdır ve M7'den sonra paralel yürütü
 
 ---
 
-## M7: Core Sözleşme Genişletmeleri ⬜
+## M7: Core Sözleşme Genişletmeleri ✅
 
 **Amaç:** Faz 2 sağlayıcılarının ve REST sunucusunun ihtiyaç duyduğu ortak kavramları core'a eklemek.
 
@@ -61,6 +61,13 @@ M8, M9, M10 ve M11 birbirinden bağımsızdır ve M7'den sonra paralel yürütü
 | M7.8 | `ARCHITECTURE.md` §4.4 yetenek tablosu ve §5.2 doğrulama noktaları güncellemesi                                                                                                       |                                                                    |
 
 **Bitti sayılır:** Sahte sağlayıcılar yeni contract testlerini geçer; core kapsaması ≥ %95 kalır; mevcut iyzico/Yurtiçi testleri değişmeden geçer.
+
+**Durum (2026-11-27):** M7.0–M7.3 ve M7.5–M7.8 tamamlandı; M7.4 ertelendi. Notlar:
+
+- **M7.0 araştırması:** iyzico ve PayTR'nin resmi dokümanları okundu. iyzico taksit sorgusu (`/payment/iyzipos/installment`) BIN + tutar için hazır taksit tutarlarını döner. PayTR ise BIN bilgisini (`/odeme/api/bin-detail`) ve kart ailesi bazlı oranları (`/odeme/taksit-oranlari`) ayrı servislerden verir; toplamları sağlayıcı paketi hesaplar. Bildirimlerde iyzico JSON gövde + `X-IYZ-SIGNATURE-V3` (HMAC-SHA256, hex) kullanır, herhangi bir 2xx yeterlidir ve gövdede tutar yoktur. PayTR form gövdesi + `hash` alanı (HMAC-SHA256, base64) kullanır ve yanıtın düz metin `OK` olmasını bekler. Kısmi iade iki sağlayıcıda da vardır (iyzico v1/v2 refund, PayTR `/odeme/iade`). Ayrıntılar M8.0 ve M9.0'da sağlayıcı NOTES.md dosyalarına yazılacaktır.
+- **Sözleşme:** `queryInstallments` → `InstallmentQueryResult` (artan sıralı, tekil taksit sayıları; tek para birimi) ve `parseNotification` (ham gövde + küçük harfe çevrilmiş başlıklar) → `{ notification, acknowledgement }`. Ayrıntılar ADR-0010'da.
+- **M7.4:** Yurtiçi ve Aras için herkese açık bir push bildirim servisi bulunamadığından kargo bildirimleri Faz 5'e ertelendi.
+- Core'a `verifyHmacSignature` (hex için harf duyarsız, sabit zamanlı) eklendi. Contract paketi kısmi iade, taksit sorgusu ve bildirim (geçerli / değiştirilmiş) testleriyle genişletildi; yeni fixture'lar `installmentQuery` ve `notification`. Değişiklik yalnızca eklemedir; mevcut sağlayıcılar değişmeden geçer. Core: 210 test.
 
 ---
 

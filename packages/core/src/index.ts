@@ -124,6 +124,38 @@ export {
 } from './domain/payment/schemas.js';
 
 export {
+  CARD_SCHEMES,
+  CARD_TYPES,
+  CardSchemeSchema,
+  CardTypeSchema,
+  InstallmentOptionSchema,
+  InstallmentQueryRequestSchema,
+  InstallmentQueryResultSchema,
+  type CardScheme,
+  type CardType,
+  type InstallmentOption,
+  type InstallmentQueryRequest,
+  type InstallmentQueryRequestInput,
+  type InstallmentQueryResult,
+} from './domain/payment/installments.js';
+
+export {
+  NotificationAcknowledgementSchema,
+  NotificationRequestSchema,
+  PAYMENT_NOTIFICATION_STATUSES,
+  PaymentNotificationFailureSchema,
+  PaymentNotificationResultSchema,
+  PaymentNotificationSchema,
+  PaymentNotificationStatusSchema,
+  type NotificationAcknowledgement,
+  type NotificationRequest,
+  type NotificationRequestInput,
+  type PaymentNotification,
+  type PaymentNotificationResult,
+  type PaymentNotificationStatus,
+} from './domain/payment/notifications.js';
+
+export {
   PAYMENT_CAPABILITIES,
   type PaymentCapability,
   type PaymentOperations,
@@ -206,8 +238,10 @@ export {
   hmac,
   randomHex,
   safeEqual,
+  verifyHmacSignature,
   type DigestEncoding,
   type HashAlgorithm,
+  type VerifyHmacSignatureOptions,
 } from './utils/crypto.js';
 
 export {

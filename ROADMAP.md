@@ -97,7 +97,7 @@ Köprü'nün geliştirme fazları ve her fazın tamamlanma kriterleri. Fazlar s�
 
 ## Faz 2: Genişleme 🟨
 
-> 📋 Görev bazlı detaylı uygulama planı: [docs/plans/PHASE-2.md](./docs/plans/PHASE-2.md) (kararlar onay bekliyor)
+> 📋 Görev bazlı detaylı uygulama planı: [docs/plans/PHASE-2.md](./docs/plans/PHASE-2.md)
 
 - [ ] `@kopru/server`: JSON/REST ara katmanı, OpenAPI dokümanı, Idempotency-Key desteği, Docker imajı
 - [ ] İkinci ödeme sağlayıcısı: `@kopru/paytr`
