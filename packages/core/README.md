@@ -66,6 +66,33 @@ const result = await payments.charge({
 });
 ```
 
+### Taksit sorgusu ve bildirimler
+
+Sağlayıcı `installments.query` yeteneğini destekliyorsa kartın ilk 6–8 hanesi ve tutar için taksit seçenekleri sorgulanabilir:
+
+```ts
+const installments = await payments.queryInstallments({
+  bin: '41111111',
+  amount: { value: 120_000, currency: 'TRY' },
+});
+// installments.value.options → [{ installments: 1, installmentAmount, totalAmount }, …]
+```
+
+`notifications` yeteneğini destekleyen sağlayıcılarda, sağlayıcının bildirim (webhook) adresinize gönderdiği istek **ham gövdesiyle** verilir. İmza sağlayıcı paketinde doğrulanır; geçersiz imzada `WEBHOOK_SIGNATURE_INVALID` döner. Dönen `acknowledgement`, sağlayıcıya aynen yanıt olarak verilmelidir:
+
+```ts
+const parsed = await payments.parseNotification({ headers: request.headers, body: rawBody });
+if (parsed.ok) {
+  const { notification, acknowledgement } = parsed.value; // notification.status: succeeded | failed | pending
+  response
+    .status(acknowledgement.status)
+    .type(acknowledgement.contentType)
+    .send(acknowledgement.body);
+}
+```
+
+Aynı bildirim birden çok kez gelebilir; tekilleştirme (`orderId` + `status`) uygulamanın sorumluluğundadır.
+
 ## İlkeler
 
 - Para tutarları her zaman **kuruş cinsinden tam sayı** olarak taşınır; ondalık dönüşümü yalnızca mapper'larda yapılır.

@@ -9,6 +9,8 @@ export const PAYMENT_CAPABILITY_METHODS = {
   refund: ['refund'],
   'refund.partial': ['refund'],
   installments: [],
+  'installments.query': ['queryInstallments'],
+  notifications: ['parseNotification'],
 } as const satisfies Record<PaymentCapability, readonly (keyof PaymentOperations)[]>;
 
 /** Her kargo yeteneğinin sağlayıcıda zorunlu kıldığı metotlar. */

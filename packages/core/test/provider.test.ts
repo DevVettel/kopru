@@ -11,8 +11,12 @@ import {
 } from '../src/index.js';
 import { createRecordingHttpClient } from '../src/testing/index.js';
 import {
+  FAKE_SIGNATURE_HEADER,
+  UNKNOWN_BIN,
   chargeInput,
   fakeCargo,
+  fakeNotification,
+  installmentQueryInput,
   fakeCargoBasic,
   fakePay,
   fakePayBasic,
@@ -181,6 +185,99 @@ describe('createPaymentClient', () => {
     }
     const result = await createPaymentClient({ provider: new ClassProvider() }).charge(chargeInput);
     expect(result.ok && result.value.transactionId).toBe('cls_1');
+  });
+
+  describe('queryInstallments', () => {
+    it('BIN’i normalize eder ve artan sıralı seçenekler döner', async () => {
+      const payments = createPaymentClient({ provider: fakePay({ apiKey: 'test' }) });
+      const result = await payments.queryInstallments(installmentQueryInput);
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(result.value.bin).toBe('41111111');
+      expect(result.value.options.map((o) => o.installments)).toEqual([1, 3, 6]);
+      expect(result.value.options[1]).toEqual({
+        installments: 3,
+        installmentAmount: { value: 350, currency: 'TRY' },
+        totalAmount: { value: 1050, currency: 'TRY' },
+      });
+    });
+
+    it('geçersiz BIN’i ağa gitmeden VALIDATION_FAILED ile reddeder', async () => {
+      const http = createRecordingHttpClient();
+      const payments = createPaymentClient({ provider: fakePay({ apiKey: 'test' }), http });
+      const result = await payments.queryInstallments({ ...installmentQueryInput, bin: '4111' });
+      expect(!result.ok && result.error.code).toBe('VALIDATION_FAILED');
+      expect(http.requests).toHaveLength(0);
+    });
+
+    it('sağlayıcı hatasını olduğu gibi döner', async () => {
+      const payments = createPaymentClient({ provider: fakePay({ apiKey: 'test' }) });
+      const result = await payments.queryInstallments({
+        ...installmentQueryInput,
+        bin: UNKNOWN_BIN,
+      });
+      expect(!result.ok && result.error.code).toBe('PAYMENT_INVALID_CARD');
+    });
+
+    it('sıralı olmayan sağlayıcı sonucunu PROVIDER_UNEXPECTED_RESPONSE yapar', async () => {
+      const unsorted = definePaymentProvider({
+        id: 'unsorted-pay',
+        configSchema: z.object({}),
+        capabilities: ['installments.query'],
+        create: () => ({
+          queryInstallments: (input) => {
+            const option = (installments: number) => ({
+              installments,
+              installmentAmount: input.amount,
+              totalAmount: input.amount,
+            });
+            return Promise.resolve(ok({ bin: input.bin, options: [option(3), option(1)] }));
+          },
+        }),
+      });
+      const result = await createPaymentClient({ provider: unsorted({}) }).queryInstallments(
+        installmentQueryInput,
+      );
+      expect(!result.ok && result.error.code).toBe('PROVIDER_UNEXPECTED_RESPONSE');
+    });
+  });
+
+  describe('parseNotification', () => {
+    it('başlık isimlerini küçük harfe çevirir ve imzalı bildirimi ayrıştırır', async () => {
+      const payments = createPaymentClient({ provider: fakePay({ apiKey: 'test' }) });
+      const request = fakeNotification({ orderId: 'ORDER-9', status: 'failed' });
+      expect(Object.keys(request.headers ?? {})).toEqual([FAKE_SIGNATURE_HEADER]);
+      const result = await payments.parseNotification(request);
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(result.value.notification).toEqual({
+        orderId: 'ORDER-9',
+        status: 'failed',
+        providerStatus: 'failed',
+        failure: { code: 'PAYMENT_CARD_DECLINED', providerCode: '05' },
+      });
+      expect(result.value.acknowledgement).toEqual({
+        status: 200,
+        contentType: 'text/plain',
+        body: 'OK',
+      });
+    });
+
+    it('imzasız bildirimi WEBHOOK_SIGNATURE_INVALID ile reddeder', async () => {
+      const payments = createPaymentClient({ provider: fakePay({ apiKey: 'test' }) });
+      const result = await payments.parseNotification({ body: 'orderId=ORDER-9&status=success' });
+      expect(result.ok).toBe(false);
+      if (result.ok) return;
+      expect(result.error.code).toBe('WEBHOOK_SIGNATURE_INVALID');
+      expect(result.error.category).toBe('validation');
+      expect(result.error.userMessage).toBe('Bildirim imzası doğrulanamadı.');
+    });
+
+    it('desteklemeyen sağlayıcıda PROVIDER_CAPABILITY_NOT_SUPPORTED döner', async () => {
+      const payments = createPaymentClient({ provider: fakePayBasic({ apiKey: 'test' }) });
+      const result = await payments.parseNotification({ body: '' });
+      expect(!result.ok && result.error.code).toBe('PROVIDER_CAPABILITY_NOT_SUPPORTED');
+    });
   });
 });
 

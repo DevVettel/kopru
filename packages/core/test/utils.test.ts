@@ -13,6 +13,7 @@ import {
   parseXml,
   randomHex,
   safeEqual,
+  verifyHmacSignature,
   xmlList,
 } from '../src/index.js';
 import { z } from 'zod';
@@ -44,6 +45,23 @@ describe('crypto', () => {
     expect(safeEqual('abc', 'abc')).toBe(true);
     expect(safeEqual('abc', 'abd')).toBe(false);
     expect(safeEqual('abc', 'abcd')).toBe(false);
+  });
+
+  it('verifyHmacSignature hex imzayı harf duyarsız, base64 imzayı birebir doğrular', () => {
+    const key = 'key';
+    const data = 'The quick brown fox jumps over the lazy dog';
+    const hex = 'f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8';
+    const base = { algorithm: 'sha256', key, data } as const;
+    expect(verifyHmacSignature({ ...base, signature: hex, encoding: 'hex' })).toBe(true);
+    expect(
+      verifyHmacSignature({ ...base, signature: ` ${hex.toUpperCase()} `, encoding: 'hex' }),
+    ).toBe(true);
+    expect(verifyHmacSignature({ ...base, signature: hex.slice(1), encoding: 'hex' })).toBe(false);
+    const b64 = Buffer.from(hex, 'hex').toString('base64');
+    expect(verifyHmacSignature({ ...base, signature: b64, encoding: 'base64' })).toBe(true);
+    expect(verifyHmacSignature({ ...base, signature: b64.toLowerCase(), encoding: 'base64' })).toBe(
+      false,
+    );
   });
 });
 

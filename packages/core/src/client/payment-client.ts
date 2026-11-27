@@ -1,3 +1,17 @@
+import {
+  InstallmentQueryRequestSchema,
+  InstallmentQueryResultSchema,
+  type InstallmentQueryRequest,
+  type InstallmentQueryRequestInput,
+  type InstallmentQueryResult,
+} from '../domain/payment/installments.js';
+import {
+  NotificationRequestSchema,
+  PaymentNotificationResultSchema,
+  type NotificationRequest,
+  type NotificationRequestInput,
+  type PaymentNotificationResult,
+} from '../domain/payment/notifications.js';
 import type { PaymentCapability, PaymentProvider } from '../domain/payment/provider.js';
 import {
   ChargeRequestSchema,
@@ -54,6 +68,20 @@ export interface PaymentClient {
     input: RefundRequestInput,
     options?: CallOptions,
   ): Promise<Result<RefundResult, KopruError>>;
+  /** Kartın BIN'i ve tutar için kullanılabilir taksit seçeneklerini sorgular. */
+  queryInstallments(
+    input: InstallmentQueryRequestInput,
+    options?: CallOptions,
+  ): Promise<Result<InstallmentQueryResult, KopruError>>;
+  /**
+   * Sağlayıcının bildirim (webhook) isteğini imzasını doğrulayarak ayrıştırır.
+   * Dönen `acknowledgement` sağlayıcıya aynen yanıt olarak verilmelidir.
+   * Geçersiz imzada `WEBHOOK_SIGNATURE_INVALID` döner.
+   */
+  parseNotification(
+    input: NotificationRequestInput,
+    options?: CallOptions,
+  ): Promise<Result<PaymentNotificationResult, KopruError>>;
 }
 
 function installmentCapabilities(installments: number): PaymentCapability[] {
@@ -78,6 +106,8 @@ export function createPaymentClient(options: PaymentClientOptions): PaymentClien
   const initThreeDS = provider.initThreeDS?.bind(provider);
   const completeThreeDS = provider.completeThreeDS?.bind(provider);
   const refund = provider.refund?.bind(provider);
+  const queryInstallments = provider.queryInstallments?.bind(provider);
+  const parseNotification = provider.parseNotification?.bind(provider);
 
   return {
     providerId: provider.id,
@@ -127,6 +157,32 @@ export function createPaymentClient(options: PaymentClientOptions): PaymentClien
         requiredCapabilities: (req) =>
           req.amount === undefined ? ['refund'] : ['refund', 'refund.partial'],
         invoke: refund && ((req) => refund(req, createContext(call))),
+      }),
+
+    queryInstallments: (input, call) =>
+      runOperation({
+        ...base,
+        operation: 'queryInstallments',
+        inputSchema: InstallmentQueryRequestSchema,
+        outputSchema: InstallmentQueryResultSchema,
+        input,
+        requiredCapabilities: () => ['installments.query'],
+        invoke:
+          queryInstallments &&
+          ((req: InstallmentQueryRequest) => queryInstallments(req, createContext(call))),
+      }),
+
+    parseNotification: (input, call) =>
+      runOperation({
+        ...base,
+        operation: 'parseNotification',
+        inputSchema: NotificationRequestSchema,
+        outputSchema: PaymentNotificationResultSchema,
+        input,
+        requiredCapabilities: () => ['notifications'],
+        invoke:
+          parseNotification &&
+          ((req: NotificationRequest) => parseNotification(req, createContext(call))),
       }),
   };
 }

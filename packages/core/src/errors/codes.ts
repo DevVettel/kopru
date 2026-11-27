@@ -33,6 +33,8 @@ export const ERROR_CODES = [
   'PAYMENT_THREEDS_FAILED',
   'PAYMENT_FRAUD_SUSPECTED',
   'PAYMENT_REFUND_FAILED',
+  'PAYMENT_INSTALLMENT_NOT_AVAILABLE',
+  'WEBHOOK_SIGNATURE_INVALID',
   'CARGO_ADDRESS_INVALID',
   'CARGO_SHIPMENT_NOT_FOUND',
   'CARGO_CANCELLATION_NOT_ALLOWED',
@@ -133,6 +135,16 @@ export const ERROR_CATALOG = {
     category: 'payment',
     retryable: false,
     userMessage: 'İade işlemi gerçekleştirilemedi.',
+  },
+  PAYMENT_INSTALLMENT_NOT_AVAILABLE: {
+    category: 'payment',
+    retryable: false,
+    userMessage: 'Seçilen taksit seçeneği bu kart için kullanılamıyor.',
+  },
+  WEBHOOK_SIGNATURE_INVALID: {
+    category: 'validation',
+    retryable: false,
+    userMessage: 'Bildirim imzası doğrulanamadı.',
   },
   CARGO_ADDRESS_INVALID: {
     category: 'cargo',

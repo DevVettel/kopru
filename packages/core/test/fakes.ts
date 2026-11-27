@@ -6,11 +6,18 @@ import {
   definePaymentProvider,
   err,
   formatIstanbulDateTime,
+  hmac,
   ok,
+  verifyHmacSignature,
+  ValidationError,
   type ChargeRequest,
   type ChargeRequestInput,
   type ChargeResult,
   type CreateShipmentRequestInput,
+  type InstallmentOption,
+  type InstallmentQueryRequestInput,
+  type Money,
+  type NotificationRequestInput,
   type ProviderContext,
   type Shipment,
   type ShipmentLookup,
@@ -45,6 +52,47 @@ export const shipmentInput = {
 
 const ConfigSchema = z.object({ apiKey: z.string().min(1) });
 
+/** Sahte sağlayıcıların bildirim imzası için kullandığı API anahtarı. */
+export const FAKE_API_KEY = 'test';
+/** Sahte ödeme sağlayıcısının bildirim imza başlığı. */
+export const FAKE_SIGNATURE_HEADER = 'X-Fake-Signature';
+/** Sahte ödeme sağlayıcısında tanınmayan BIN. */
+export const UNKNOWN_BIN = '99999999';
+
+export const installmentQueryInput = {
+  bin: '4111 1111',
+  amount: { value: 1000, currency: 'TRY' },
+} satisfies InstallmentQueryRequestInput;
+
+/** Sahte sağlayıcının bildirimi: form gövdesi ve gövdenin HMAC-SHA256 (hex) imzası. */
+export function fakeNotification(fields: Record<string, string>): NotificationRequestInput {
+  const body = new URLSearchParams(fields).toString();
+  return {
+    headers: { [FAKE_SIGNATURE_HEADER]: hmac('sha256', FAKE_API_KEY, body) },
+    body,
+  };
+}
+
+/** Sahte taksit oranları (binde): 1 → %0, 3 → %5, 6 → %10. */
+const FAKE_INSTALLMENT_RATES = [
+  [1, 0],
+  [3, 50],
+  [6, 100],
+] as const;
+
+function installmentOption(
+  amount: Money,
+  installments: number,
+  ratePerMille: number,
+): InstallmentOption {
+  const total = Math.round((amount.value * (1000 + ratePerMille)) / 1000);
+  return {
+    installments,
+    installmentAmount: { value: Math.ceil(total / installments), currency: amount.currency },
+    totalAmount: { value: total, currency: amount.currency },
+  };
+}
+
 function chargeResult(input: ChargeRequest, id: string, ctx: ProviderContext): ChargeResult {
   return {
     transactionId: id,
@@ -61,8 +109,16 @@ function chargeResult(input: ChargeRequest, id: string, ctx: ProviderContext): C
 export const fakePay = definePaymentProvider({
   id: 'fake-pay',
   configSchema: ConfigSchema,
-  capabilities: ['charge', 'threeDS', 'refund', 'refund.partial', 'installments'],
-  create: () => {
+  capabilities: [
+    'charge',
+    'threeDS',
+    'refund',
+    'refund.partial',
+    'installments',
+    'installments.query',
+    'notifications',
+  ],
+  create: (config) => {
     const charges = new Map<string, ChargeResult>();
     let sequence = 0;
     return {
@@ -137,6 +193,66 @@ export const fakePay = definePaymentProvider({
             transactionId: charge.transactionId,
             amount: input.amount ?? charge.amount,
             createdAt: formatIstanbulDateTime(ctx.now()),
+          }),
+        );
+      },
+      queryInstallments: (input) => {
+        if (input.bin === UNKNOWN_BIN) {
+          return Promise.resolve(
+            err(
+              new PaymentError({
+                code: 'PAYMENT_INVALID_CARD',
+                message: 'Unknown BIN',
+                provider: 'fake-pay',
+              }),
+            ),
+          );
+        }
+        return Promise.resolve(
+          ok({
+            bin: input.bin,
+            bankName: 'Fake Bank',
+            cardType: 'credit' as const,
+            cardScheme: 'visa' as const,
+            options: FAKE_INSTALLMENT_RATES.map(([count, rate]) =>
+              installmentOption(input.amount, count, rate),
+            ),
+          }),
+        );
+      },
+      parseNotification: (input) => {
+        const signature = input.headers[FAKE_SIGNATURE_HEADER.toLowerCase()] ?? '';
+        const valid = verifyHmacSignature({
+          algorithm: 'sha256',
+          key: config.apiKey,
+          data: input.body,
+          signature,
+          encoding: 'hex',
+        });
+        if (!valid) {
+          return Promise.resolve(
+            err(
+              new ValidationError({
+                code: 'WEBHOOK_SIGNATURE_INVALID',
+                message: 'Invalid notification signature',
+                provider: 'fake-pay',
+              }),
+            ),
+          );
+        }
+        const fields = new URLSearchParams(input.body);
+        const status = fields.get('status') === 'success' ? 'succeeded' : 'failed';
+        return Promise.resolve(
+          ok({
+            notification: {
+              orderId: fields.get('orderId') ?? '',
+              status,
+              providerStatus: fields.get('status') ?? 'unknown',
+              ...(status === 'failed'
+                ? { failure: { code: 'PAYMENT_CARD_DECLINED' as const, providerCode: '05' } }
+                : {}),
+            },
+            acknowledgement: { status: 200, contentType: 'text/plain', body: 'OK' },
           }),
         );
       },

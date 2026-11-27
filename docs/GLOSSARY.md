@@ -8,37 +8,45 @@ Bu sözlük, Türkçe alan terimlerinin kodda hangi **İngilizce** isimle karş�
 
 ## Ödeme
 
-| Türkçe Terim                     | Kod Karşılığı                  | Açıklama                                                                    |
-| -------------------------------- | ------------------------------ | --------------------------------------------------------------------------- |
-| Ödeme / Tahsilat                 | `charge`                       | Karttan para çekme işleminin tamamı (tek adımlı satış).                     |
-| İşlem                            | `transaction`                  | Sağlayıcı tarafında oluşan tekil kayıt; `transactionId` ile tanımlanır.     |
-| Sipariş / Sepet numarası         | `orderId`                      | İşlemi başlatan tarafın (mağazanın) referansı. Idempotency için kullanılır. |
-| Sanal POS                        | `virtualPos`                   | Bankaların internet üzerinden kart ödemesi alma altyapısı.                  |
-| Ödeme kuruluşu                   | `paymentInstitution`           | iyzico, PayTR gibi BDDK lisanslı aracı kuruluşlar.                          |
-| Üye işyeri                       | `merchant`                     | Ödemeyi alan işletme.                                                       |
-| Üye işyeri numarası              | `merchantId`                   | Banka/kuruluş tarafından verilen işyeri kimliği.                            |
-| Taksit                           | `installment`                  | Taksit sayısı `installments: number` (tek çekim = `1`).                     |
-| Tek çekim                        | `installments: 1`              | Ayrı bir kavram olarak modellenmez.                                         |
-| 3D Secure / 3D Doğrulama         | `threeDS`                      | Fonksiyonlar: `initThreeDS`, `completeThreeDS`.                             |
-| Ön provizyon                     | `preAuthorization` (`preAuth`) | Tutarın bloke edilmesi, henüz çekilmemesi.                                  |
-| Provizyon kapama / Son provizyon | `capture`                      | Bloke edilen tutarın tahsil edilmesi.                                       |
-| İptal (gün içi)                  | `cancel` / `void`              | Gün sonu öncesi işlemin geri alınması. Kod: `cancel`.                       |
-| İade                             | `refund`                       | Gün sonu sonrası tutarın geri ödenmesi.                                     |
-| Kısmi iade                       | `partialRefund`                | Capability: `refund.partial`.                                               |
-| Gün sonu                         | `settlement`                   | Bankanın işlemleri mutabakata aldığı kapanış.                               |
-| Kart sahibi                      | `cardHolder`                   | Kart üzerindeki isim: `holderName`.                                         |
-| Son kullanma tarihi              | `expiry`                       | `MM/YY` formatında.                                                         |
-| Güvenlik kodu                    | `cvc`                          | CVV/CVC2 ayrımı yapılmaz, her yerde `cvc`.                                  |
-| BIN numarası                     | `bin`                          | Kartın ilk 6–8 hanesi; banka/kart ailesi tespiti için.                      |
-| Kart ailesi                      | `cardFamily`                   | Bonus, World, Maximum, Axess vb.                                            |
-| Alıcı                            | `buyer`                        | Ödemeyi yapan son kullanıcı.                                                |
-| Tutar                            | `amount` (`Money`)             | Her zaman kuruş cinsinden tam sayı.                                         |
-| Kuruş                            | minor unit                     | `Money.value` alanı kuruş cinsindendir; ayrı bir alan yoktur.               |
-| Hash / İmza                      | `signature`                    | İstek/yanıt bütünlüğü için hesaplanan değer.                                |
-| Sepet kalemi                     | `basketItem` (liste: `items`)  | Siparişteki tekil ürün; fiyatlar toplamı `amount`'a eşittir.                |
-| Kartın son 4 hanesi              | `cardLastFour`                 | Sonuçlarda kartı tanımlamak için; tam numara asla dönmez.                   |
-| 3D yönlendirmesi                 | `ThreeDSAction`                | `html` (sağlayıcı sayfası) veya `redirect` (URL + form alanları).           |
-| Yetenek                          | `capability`                   | Sağlayıcının desteklediği işlem; örn. `refund.partial`.                     |
+| Türkçe Terim                     | Kod Karşılığı                  | Açıklama                                                                                                                 |
+| -------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Ödeme / Tahsilat                 | `charge`                       | Karttan para çekme işleminin tamamı (tek adımlı satış).                                                                  |
+| İşlem                            | `transaction`                  | Sağlayıcı tarafında oluşan tekil kayıt; `transactionId` ile tanımlanır.                                                  |
+| Sipariş / Sepet numarası         | `orderId`                      | İşlemi başlatan tarafın (mağazanın) referansı. Idempotency için kullanılır.                                              |
+| Sanal POS                        | `virtualPos`                   | Bankaların internet üzerinden kart ödemesi alma altyapısı.                                                               |
+| Ödeme kuruluşu                   | `paymentInstitution`           | iyzico, PayTR gibi BDDK lisanslı aracı kuruluşlar.                                                                       |
+| Üye işyeri                       | `merchant`                     | Ödemeyi alan işletme.                                                                                                    |
+| Üye işyeri numarası              | `merchantId`                   | Banka/kuruluş tarafından verilen işyeri kimliği.                                                                         |
+| Taksit                           | `installment`                  | Taksit sayısı `installments: number` (tek çekim = `1`).                                                                  |
+| Tek çekim                        | `installments: 1`              | Ayrı bir kavram olarak modellenmez.                                                                                      |
+| 3D Secure / 3D Doğrulama         | `threeDS`                      | Fonksiyonlar: `initThreeDS`, `completeThreeDS`.                                                                          |
+| Ön provizyon                     | `preAuthorization` (`preAuth`) | Tutarın bloke edilmesi, henüz çekilmemesi.                                                                               |
+| Provizyon kapama / Son provizyon | `capture`                      | Bloke edilen tutarın tahsil edilmesi.                                                                                    |
+| İptal (gün içi)                  | `cancel` / `void`              | Gün sonu öncesi işlemin geri alınması. Kod: `cancel`.                                                                    |
+| İade                             | `refund`                       | Gün sonu sonrası tutarın geri ödenmesi.                                                                                  |
+| Kısmi iade                       | `partialRefund`                | Capability: `refund.partial`.                                                                                            |
+| Gün sonu                         | `settlement`                   | Bankanın işlemleri mutabakata aldığı kapanış.                                                                            |
+| Kart sahibi                      | `cardHolder`                   | Kart üzerindeki isim: `holderName`.                                                                                      |
+| Son kullanma tarihi              | `expiry`                       | `MM/YY` formatında.                                                                                                      |
+| Güvenlik kodu                    | `cvc`                          | CVV/CVC2 ayrımı yapılmaz, her yerde `cvc`.                                                                               |
+| BIN numarası                     | `bin`                          | Kartın ilk 6–8 hanesi; banka/kart ailesi tespiti için.                                                                   |
+| Kart ailesi                      | `cardFamily`                   | Bonus, World, Maximum, Axess vb.                                                                                         |
+| Alıcı                            | `buyer`                        | Ödemeyi yapan son kullanıcı.                                                                                             |
+| Tutar                            | `amount` (`Money`)             | Her zaman kuruş cinsinden tam sayı.                                                                                      |
+| Kuruş                            | minor unit                     | `Money.value` alanı kuruş cinsindendir; ayrı bir alan yoktur.                                                            |
+| Hash / İmza                      | `signature`                    | İstek/yanıt bütünlüğü için hesaplanan değer.                                                                             |
+| Sepet kalemi                     | `basketItem` (liste: `items`)  | Siparişteki tekil ürün; fiyatlar toplamı `amount`'a eşittir.                                                             |
+| Kartın son 4 hanesi              | `cardLastFour`                 | Sonuçlarda kartı tanımlamak için; tam numara asla dönmez.                                                                |
+| 3D yönlendirmesi                 | `ThreeDSAction`                | `html` (sağlayıcı sayfası) veya `redirect` (URL + form alanları).                                                        |
+| Yetenek                          | `capability`                   | Sağlayıcının desteklediği işlem; örn. `refund.partial`.                                                                  |
+| Taksit sorgusu                   | `queryInstallments`            | BIN ve tutara göre taksit seçeneklerinin sorgulanması. Capability: `installments.query`.                                 |
+| Taksit seçeneği                  | `InstallmentOption`            | `installments`, aylık `installmentAmount`, vade farkı dahil `totalAmount`.                                               |
+| Kart tipi                        | `cardType`                     | `credit` (kredi), `debit` (banka kartı), `prepaid` (ön ödemeli).                                                         |
+| Kart kuruluşu / Kart şeması      | `cardScheme`                   | `visa`, `mastercard`, `amex`, `troy`, `other`.                                                                           |
+| Ticari kart                      | `commercial`                   | Kurumsal/şirket kartı (`boolean`).                                                                                       |
+| Bildirim / Webhook               | `notification`                 | Sağlayıcının sunucudan sunucuya gönderdiği sonuç bildirimi. Fonksiyon: `parseNotification`, capability: `notifications`. |
+| Bildirim yanıtı                  | `acknowledgement`              | Bildirimi gönderen sağlayıcıya dönülecek HTTP yanıtı (örn. PayTR için `OK`).                                             |
+| Idempotency anahtarı             | `idempotencyKey`               | Aynı isteğin tekrarında işlemin ikinci kez yapılmamasını sağlayan istemci anahtarı (`Idempotency-Key` başlığı).          |
 
 ## Kargo
 

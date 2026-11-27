@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { createPaymentClient, type PaymentClient } from '../client/payment-client.js';
 import type { ClientOptions } from '../client/run-operation.js';
+import {
+  InstallmentQueryResultSchema,
+  type InstallmentQueryRequestInput,
+} from '../domain/payment/installments.js';
+import {
+  PaymentNotificationResultSchema,
+  type NotificationRequestInput,
+} from '../domain/payment/notifications.js';
 import { PAYMENT_CAPABILITIES, type PaymentProvider } from '../domain/payment/provider.js';
 import {
   ChargeResultSchema,
@@ -20,6 +28,15 @@ export interface PaymentContractFixtures {
   declinedCharge?: ChargeRequestInput;
   /** 3DS başlatma isteği; sağlayıcı `threeDS` destekliyorsa zorunludur. */
   threeDSInit?: ThreeDSInitRequestInput;
+  /** Taksit sorgusu; sağlayıcı `installments.query` destekliyorsa zorunludur. */
+  installmentQuery?: InstallmentQueryRequestInput;
+  /** Bildirim örnekleri; sağlayıcı `notifications` destekliyorsa zorunludur. */
+  notification?: {
+    /** İmzası geçerli bildirim. */
+    valid: NotificationRequestInput;
+    /** Gövdesi veya imzası değiştirilmiş bildirim. */
+    tampered: NotificationRequestInput;
+  };
 }
 
 /** `runPaymentProviderContract` seçenekleri. */
@@ -92,6 +109,15 @@ export function runPaymentProviderContract(options: PaymentContractOptions): voi
         call: (c: PaymentClient) =>
           c.refund({ transactionId: 'contract', amount: { value: 1, currency: 'TRY' } }),
       },
+      {
+        capability: 'installments.query',
+        call: (c: PaymentClient) =>
+          c.queryInstallments({ bin: '41111111', amount: { value: 1000, currency: 'TRY' } }),
+      },
+      {
+        capability: 'notifications',
+        call: (c: PaymentClient) => c.parseNotification({ body: '' }),
+      },
     ] as const;
     const unsupported = cases.filter((c) => !has(c.capability));
 
@@ -159,6 +185,66 @@ export function runPaymentProviderContract(options: PaymentContractOptions): voi
         expect(RefundResultSchema.safeParse(refunded.value).success).toBe(true);
         expect(refunded.value.transactionId).toBe(charged.value.transactionId);
         expect(refunded.value.amount).toEqual(charged.value.amount);
+      });
+    }
+
+    if (has('charge') && has('refund.partial')) {
+      it('partial refund returns a RefundResult with the requested amount', async () => {
+        const payments = client();
+        const charged = await payments.charge(fixtures.successfulCharge);
+        expect(charged.ok).toBe(true);
+        if (!charged.ok) return;
+        const amount = {
+          value: Math.max(1, Math.floor(charged.value.amount.value / 2)),
+          currency: charged.value.amount.currency,
+        };
+        const refunded = await payments.refund({
+          transactionId: charged.value.transactionId,
+          amount,
+        });
+        expect(refunded.ok, refunded.ok ? '' : refunded.error.message).toBe(true);
+        if (!refunded.ok) return;
+        expect(RefundResultSchema.safeParse(refunded.value).success).toBe(true);
+        expect(refunded.value.amount).toEqual(amount);
+      });
+    }
+
+    if (has('installments.query')) {
+      it('queryInstallments returns valid options in the requested currency', async () => {
+        const query = fixtures.installmentQuery;
+        expect(query, 'fixtures.installmentQuery is required for installments.query').toBeDefined();
+        if (query === undefined) return;
+        const result = await client().queryInstallments(query);
+        expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
+        if (!result.ok) return;
+        expect(InstallmentQueryResultSchema.safeParse(result.value).success).toBe(true);
+        for (const option of result.value.options) {
+          expect(option.totalAmount.currency).toBe(query.amount.currency);
+          expect(option.installmentAmount.currency).toBe(query.amount.currency);
+        }
+      });
+    }
+
+    if (has('notifications')) {
+      it('parseNotification accepts a correctly signed notification', async () => {
+        const notification = fixtures.notification;
+        expect(notification, 'fixtures.notification is required for notifications').toBeDefined();
+        if (notification === undefined) return;
+        const result = await client().parseNotification(notification.valid);
+        expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
+        if (!result.ok) return;
+        expect(PaymentNotificationResultSchema.safeParse(result.value).success).toBe(true);
+      });
+
+      it('parseNotification rejects a tampered notification with WEBHOOK_SIGNATURE_INVALID', async () => {
+        const notification = fixtures.notification;
+        if (notification === undefined) return;
+        const result = await client().parseNotification(notification.tampered);
+        expect(result.ok).toBe(false);
+        if (!result.ok) {
+          expect(result.error.code).toBe('WEBHOOK_SIGNATURE_INVALID');
+          expect(result.error.provider).toBe(probe.id);
+        }
       });
     }
   });
