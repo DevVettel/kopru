@@ -350,3 +350,4 @@ Sürümler Changesets ile yönetilir. npm yayını yalnızca elle başlatılan `
 Bekleyen kararlar:
 
 - `@kopru/server` için HTTP framework seçimi (Faz 2; mock server için Hono seçildi, bkz. ADR-0003)
+- OpenAPI üretimi, idempotency deposu ve asenkron ödeme bildirimi modeli (Faz 2; öneriler [docs/plans/PHASE-2.md](./docs/plans/PHASE-2.md) §0)
