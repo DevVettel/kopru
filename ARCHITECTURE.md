@@ -162,10 +162,12 @@ Result<ChargeResult, KopruError>
 
 Her sağlayıcı her özelliği desteklemez (örn. kısmi iade, taksit, kargo iptali). Sağlayıcı, desteklediği yetenekleri statik olarak bir metin listesiyle bildirir:
 
-| Alan  | Yetenekler                                                            |
-| ----- | --------------------------------------------------------------------- |
-| Ödeme | `charge`, `threeDS`, `refund`, `refund.partial`, `installments`       |
-| Kargo | `createShipment`, `cancelShipment`, `trackShipment`, `cashOnDelivery` |
+| Alan  | Yetenekler                                                                                             |
+| ----- | ------------------------------------------------------------------------------------------------------ |
+| Ödeme | `charge`, `threeDS`, `refund`, `refund.partial`, `installments`, `installments.query`, `notifications` |
+| Kargo | `createShipment`, `cancelShipment`, `trackShipment`, `cashOnDelivery`                                  |
+
+`installments` taksitli tahsilat yapabilmeyi, `installments.query` BIN bazlı taksit sorgusunu (`queryInstallments`), `notifications` ise sağlayıcı bildirimlerinin (webhook) imzası doğrulanarak ayrıştırılmasını (`parseNotification`) ifade eder (bkz. [ADR-0010](./docs/adr/0010-payment-notifications.md)).
 
 Client, girdiye göre gereken yetenekleri de hesaplar (örn. `installments > 1` → `installments`, `amount` verilmiş iade → `refund.partial`, `cashOnDelivery` verilmiş gönderi → `cashOnDelivery`). Desteklenmeyen bir işlem çağrılırsa ağ isteği yapılmadan `PROVIDER_CAPABILITY_NOT_SUPPORTED` hatası döner. Kullanıcı çalışma zamanında `client.supports('refund.partial')` ile kontrol yapabilir.
 
@@ -269,6 +271,8 @@ PAYMENT_INVALID_CARD
 PAYMENT_THREEDS_FAILED
 PAYMENT_FRAUD_SUSPECTED
 PAYMENT_REFUND_FAILED
+PAYMENT_INSTALLMENT_NOT_AVAILABLE
+WEBHOOK_SIGNATURE_INVALID
 CARGO_ADDRESS_INVALID
 CARGO_SHIPMENT_NOT_FOUND
 CARGO_CANCELLATION_NOT_ALLOWED
@@ -303,11 +307,12 @@ HTTP durum kodu kategoriye göre belirlenir (`validation` → 422, `config` → 
 
 ## 7. `@kopru/server` (JSON/REST Ara Katmanı)
 
-- Hafif bir HTTP framework'ü (Hono ya da Fastify, seçim bir ADR ile yapılacak) üzerine kurulur.
+- **Hono** üzerine kurulur ([ADR-0007](./docs/adr/0007-server-hono.md)).
 - Endpoint'ler alan bazlıdır: `POST /v1/payments/charge`, `POST /v1/cargo/shipments`, `GET /v1/cargo/shipments/:id/tracking`.
-- İstek/yanıt şemaları core'daki Zod şemalarının aynısıdır; OpenAPI dokümanı bu şemalardan otomatik üretilir.
-- Idempotency-Key başlığı desteklenir.
-- Kimlik bilgileri ortam değişkenleri veya konfigürasyon dosyası ile sağlanır; asla loglanmaz.
+- İstek/yanıt şemaları core'daki Zod şemalarının aynısıdır; OpenAPI 3.1 dokümanı bu şemalardan Zod 4'ün `z.toJSONSchema()` fonksiyonuyla üretilir ([ADR-0008](./docs/adr/0008-openapi-from-zod.md)).
+- Idempotency-Key başlığı desteklenir; kayıtlar enjekte edilen bir `IdempotencyStore`'da tutulur, varsayılanı bellek içidir ([ADR-0009](./docs/adr/0009-idempotency-store.md)).
+- Sunucuya erişim Bearer API anahtarıyla korunur; anahtar tanımlanmadan sunucu başlamaz. Sağlayıcı bildirim uçları (`/v1/payments/notifications/:provider`) API anahtarı yerine sağlayıcı imzasıyla korunur ve sağlayıcının belirlediği `acknowledgement` yanıtını döner.
+- Sağlayıcı kimlik bilgileri ortam değişkenleri veya `kopru.config.json` ile sağlanır, Zod ile doğrulanır ve asla loglanmaz.
 
 ## 8. `@kopru/mock-server`
 
@@ -347,7 +352,4 @@ Sürümler Changesets ile yönetilir. npm yayını yalnızca elle başlatılan `
 
 Önemli kararlar `docs/adr/NNNN-baslik.md` formatında kaydedilir. Kayıtlı kararların listesi: [docs/adr/README.md](./docs/adr/README.md).
 
-Bekleyen kararlar:
-
-- `@kopru/server` için HTTP framework seçimi (Faz 2; mock server için Hono seçildi, bkz. ADR-0003)
-- OpenAPI üretimi, idempotency deposu ve asenkron ödeme bildirimi modeli (Faz 2; öneriler [docs/plans/PHASE-2.md](./docs/plans/PHASE-2.md) §0)
+Bekleyen karar yoktur.
